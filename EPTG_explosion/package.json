@@ -1,0 +1,13 @@
+{
+  "name": "explosion",
+  "author": "matt",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-coffee": "*",
+    "coffee-script": "*",
+    "gulp-jade": "*",
+    "gulp-clean": "*",
+    "gulp-stylus": "*"
+  }
+}
