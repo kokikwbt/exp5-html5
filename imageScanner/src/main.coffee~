@@ -1,0 +1,54 @@
+#画像データを追加するメソッド
+addImageData = (refChild) ->
+    parentDiv = refChild.parentNode    #親ノードを取得
+    newChild = document.createElement("li")    #子ノードを生成
+    newChild.style = "display:inline;"
+
+#    hr = document.createElement("hr")    #上部の線
+#    newChild.appendChild(hr)
+
+    divLeft = document.createElement("div")
+    div = document.createElement("div")
+
+    #画像データ作成
+    newImg = document.createElement("img")
+    newImg.style.width = "100px"
+    newImg.style.height = "100px"
+    newImg.src = "./sample.png"    #画像データを取得してURLを代入したい
+
+
+    deleteButton = document.createElement("img")
+    deleteButton.name = "image_data_right"
+    deleteButton.style.width = "10px"
+    deleteButton.style.height = "10px"
+    deleteButton.src = "./deleteButton.png"
+
+    #ファイル名入力フォーム作成
+    textArea = document.createElement("textarea")
+    textArea.value = 'sample.png'    #初期ファイル名を生成して代入したい
+    textArea.cols = "25"
+    textArea.rows = "1"
+
+#    divLeft.appendChild(newImg)
+#    div.appendChild(deleteButton)
+#    div.appendChild(textArea)   
+    newChild.appendChild(newImg)
+    newChild.appendChild(deleteButton)
+    parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入
+
+
+#ページが読み込まれた時の処理
+window.onload = ->
+#    alert("window.onload") #for debug
+
+    #addButton
+    addButton = document.getElementById "add_button"
+    #click event
+    addButton.onclick = ->
+        alert("addButton") #for debug
+
+
+    #ImageData
+    imageData = document.getElementById "image_data"
+    addImageData(imageData) for i in [0..7]
+

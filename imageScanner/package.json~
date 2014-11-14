@@ -1,0 +1,15 @@
+{
+  "name": "chrome",
+  "author": "kouki",
+  "license": "MIT",
+  "devDependencies": {
+    "coffee-script": "*",
+    "gulp": "*",
+    "gulp-clean": "*",
+    "gulp-coffee": "*",
+    "gulp-jade": "*",
+    "gulp-sass": "*",
+    "gulp-stylus": "*"
+  }
+  
+}

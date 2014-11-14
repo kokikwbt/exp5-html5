@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="./main.js"></script>
+  </head>
+  <body>
+    <ul id="header">
+      <li>
+        <button id="button">all select</button>
+      </li>
+      <li>
+        <button id="button">all cancel</button>
+      </li>
+      <li>
+        <select>
+          option(value="1") 
+          option(value="2") Documents
+        </select>
+      </li>
+      <li>
+        <button id="button">save</button>
+      </li>
+    </ul>
+    <hr>
+    <ul id="image_list"></ul>
+    <hr>
+    <div id="footer">
+      <button id="add_button" onClick="addImage()">+ADD</button>
+    </div>
+  </body>
+</html>
