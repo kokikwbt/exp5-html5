@@ -8,14 +8,25 @@
                 "16": "icons/icon.png"
         },
 
-
-	"content_scripts":{
-		"js":[contentscript.js]
-	}
-
+        "permissions":[
+                "tabs","https://*/*","http://*/*","background"
+        ],
+		
         "browser_action": {
-           "default_icon": "icons/icon.png", 
+           "default_icon": "icons/icon.png",
            "default_title": "imageScanner",
            "default_popup": "popup.html"
-        }
+        },
+
+	"background":{
+		"scripts":["background.js"],
+		"persistent": true
+	},
+
+	"content_scripts":[
+		{
+			"matches":["https://*/*"],
+			"js":["myscript.js"]
+		}
+	]
 }

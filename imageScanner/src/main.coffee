@@ -1,20 +1,54 @@
+class ImageData
+    constructor : (refChild, i) ->
+        parentDiv = refChild.parentNode #親ノードを取得
+        newChild = document.createElement("div") #子ノードを生成
+        newChild.style = "display:inline;"
+        
+        img = document.createElement("img")
+        img.id = "image_data_left"
+        img.src = chrome.extension.getBackgroundPage().imageSrc[i]
+
+        deleteButton = document.createElement("img")
+        deleteButton.id = "delete_button"
+        deleteButton.src = "./image/deleteButton.png"
+        deleteButton.onclick = ->
+            parentDiv.removeChild(newChild)
+            console.log("delete button was pushed")
+
+        imageName = document.createElement("textarea")
+        imageName.id = "hr"
+        imageName.value = 'sample.png'    #初期ファイル名を生成して代入したい
+        imageName.cols = "25"
+        imageName.rows = "1"
+  
+        hr =  document.createElement("hr")
+        hr.id = "hr"
+
+        newChild.appendChild(img)
+        newChild.appendChild(deleteButton)
+        newChild.appendChild(imageName)
+        newChild.appendChild(hr)
+        parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入
+
+    delete : () ->
+        @.parentDiv.removeChild(@.newChild)
+    
+
 #画像データを追加するメソッド
-addImageData = (refChild) ->
+addImageData = (refChild, i) ->
     parentDiv = refChild.parentNode    #親ノードを取得
     newChild = document.createElement("div")    #子ノードを生成
     newChild.style = "display:inline;"
 
     newImg = document.createElement("img")
-    newImg.id = "image_data_left"
-    newImg.style.width = "100px"
-    newImg.style.height = "100px"
-    newImg.src = "document.images.src"#./sample.png"
+    newImg.id = "image_data"
+    newImg.src = chrome.extension.getBackgroundPage().imageSrc[i]
 
     deleteButton = document.createElement("img")
-    deleteButton.id = "image_data_right"
-    deleteButton.style.width = "10px"
-    deleteButton.style.height = "10px"
-    deleteButton.src = "./deleteButton.png"
+    deleteButton.id = "delete_button"
+    deleteButton.src = "./image/deleteButton.png"
+    deleteButton.onclick = () ->
+        
 
     #ファイル名入力フォーム作成
     textArea = document.createElement("textarea")
@@ -30,21 +64,17 @@ addImageData = (refChild) ->
     newChild.appendChild(deleteButton)
     newChild.appendChild(textArea)
     newChild.appendChild(hr)
-    parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入
-
+    parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入 
 
 #ページが読み込まれた時の処理
 window.onload = ->
-#    alert("window.onload") #for debug
 
     #addButton
     addButton = document.getElementById "add_button"
-    #click event
     addButton.onclick = ->
-#        alert("addButton") #for debug
         addImageData(imageData) for i in [0..2]
 
     #ImageData
-    imageData = document.getElementById "image_data"
-    addImageData(imageData) for i in [0..2]
-
+    imageBox = document.getElementById "image_data"
+    imageData = []
+    imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length]

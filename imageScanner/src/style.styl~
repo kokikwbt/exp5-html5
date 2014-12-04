@@ -1,14 +1,20 @@
 body
-	background-image: url(./src/back.png)
+	background-color: #800000
 	width: 400px
 	height: 500px
 
+#image_data
+	list-style:none
 
 #image_data_right
-	float:right
+	float: right
+        width: 100px
+	height: 100px
 
 #image_data_left
 	float:left
+	width: 100px
+	height: 100px
 
 #header li
 	list-style:none
