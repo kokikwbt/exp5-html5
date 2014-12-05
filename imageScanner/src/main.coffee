@@ -77,4 +77,4 @@ window.onload = ->
     #ImageData
     imageBox = document.getElementById "image_data"
     imageData = []
-    imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length]
+    imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length-1]

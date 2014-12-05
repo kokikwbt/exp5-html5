@@ -3,17 +3,16 @@ console.log(window)
 window.imageSrc = []
 
 clearimageSrc = ->
-	window.imageSrc =[]
-
-myalert = ->
-    alert("read background.js from popup!")
+	window.imageSrc = []
 
 chrome.extension.onMessage.addListener(
     (result) ->
-    	if result == "clear"
-    			clearimageSrc();
-
-        else
-        	console.log(result)
-            window.imageSrc.push(result)
+    	console.log(result)
+    	if result.refresh =="refreshrequest"
+    		clearimageSrc()
+    		console.log (window.imageSrc)
+    		console.log	("ClearimageSrc")
+    	else 
+    		window.imageSrc = result.image
+    		console.log (window.imageSrc)
 )

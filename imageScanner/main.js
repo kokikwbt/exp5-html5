@@ -79,7 +79,7 @@
     imageBox = document.getElementById("image_data");
     imageData = [];
     _results = [];
-    for (i = _i = 0, _ref = chrome.extension.getBackgroundPage().imageSrc.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+    for (i = _i = 0, _ref = chrome.extension.getBackgroundPage().imageSrc.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
       _results.push(imageData[i] = new ImageData(imageBox, i));
     }
     return _results;
