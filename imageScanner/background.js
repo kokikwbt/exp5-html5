@@ -15,9 +15,21 @@
       clearimageSrc();
       console.log(window.imageSrc);
       return console.log("ClearimageSrc");
+    } else if (result.name === "image num") {
+      return chrome.browserAction.setBadgeText({
+        text: String(result.num)
+      });
+    } else if (result.name === "delete child") {
+      window.imageSrc.splice(result.num, 1);
+      console.log(window.imageSrc.length);
+      chrome.browserAction.setBadgeText({
+        text: String(window.imageSrc.length)
+      });
+      return chrome.runtime.sendMessage({
+        name: "refresh after delete"
+      });
     } else {
-      window.imageSrc = result.image;
-      return console.log(window.imageSrc);
+      return window.imageSrc = result.image;
     }
   });
 

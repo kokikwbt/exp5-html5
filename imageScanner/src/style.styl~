@@ -6,15 +6,14 @@ body
 #image_data
 	list-style:none
 
-#image_data_right
-	float: right
-        width: 100px
-	height: 100px
+#delete_button
+	float: left
+	width: 10px
+	height: 10px
 
 #image_data_left
 	float:left
-	width: 100px
-	height: 100px
+	width: 150px
 
 #header li
 	list-style:none
