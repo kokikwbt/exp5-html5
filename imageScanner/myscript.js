@@ -1,8 +1,6 @@
 (function() {
   var i, img, _i, _ref;
 
-  console.log("I am content script");
-
   console.log(document.images);
 
   console.log(document.images.length);
@@ -11,7 +9,10 @@
     refresh: "refreshrequest"
   });
 
-  console.log("Sendrefreshrequest");
+  chrome.runtime.sendMessage({
+    name: "image num",
+    num: document.images.length
+  });
 
   img = [];
 

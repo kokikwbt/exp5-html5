@@ -9,13 +9,14 @@
         },
 
         "permissions":[
-                "tabs","https://*/*","http://*/*","background"
+                "tabs","*://*/*","background"
         ],
 		
         "browser_action": {
            "default_icon": "icons/icon.png",
            "default_title": "imageScanner",
-           "default_popup": "popup.html"
+           "default_popup": "popup.html",
+           "permissions": ["background"]
         },
 
 	"background":{
@@ -25,7 +26,7 @@
 
 	"content_scripts":[
 		{
-			"matches":["https://*/*"],
+			"matches":["*://*/*"],
 			"js":["myscript.js"]
 		}
 	]

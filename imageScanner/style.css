@@ -7,7 +7,7 @@ body {
   list-style: none;
 }
 #delete_button {
-  float: right;
+  float: left;
   width: 10px;
   height: 10px;
 }
@@ -25,9 +25,13 @@ body {
   font-style: italic;
   text-align: center;
 }
-#button {
+#select_all_button {
   font-size: large;
 }
+#cancel_all_button,
+font-size: large,
+#save_button,
+#button,
 #add_button {
   color: #000;
   font-size: x-large;
