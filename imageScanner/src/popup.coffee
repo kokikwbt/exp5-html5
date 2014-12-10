@@ -1,7 +1,7 @@
 ###
 ==================================================
 ###
-imageData = []
+window.imageData = []
 ###
 ==================================================
 ImageDataクラス．popup.htmlに表示する要素を動的に
@@ -12,6 +12,7 @@ class ImageData
     constructor : (refChild, i) ->
         parentDiv = refChild.parentNode #親ノードを取得
         newChild = document.createElement("div") #子ノードを生成
+        newChild.id = "box"
         newChild.style = "display:inline;"
         child_num = i
         
@@ -32,7 +33,7 @@ class ImageData
             #chrome.runtime.sendMessage({name: "delete child",num: child_num})
 
         chbox = document.createElement("div")
-        chbox.innerHTML = '<input type="checkbox">'
+        chbox.innerHTML = '<input type="checkbox"name="checkbox">'
 
         imageName = document.createElement("textarea")
         imageName.value = 'sample.png'    #初期ファイル名を生成して代入したい
@@ -77,7 +78,8 @@ class ImageData
         newChild.appendChild(hrEnd)
         parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入
 
-
+    check : ->
+        @.chbox.checked = true
 ###
 chrome.extension.onMessage.addListener(
     (result) ->
@@ -93,17 +95,19 @@ chrome.extension.onMessage.addListener(
 ==================================================
 ###
 window.onload = ->
-
     #select all button
     selectAllButton = document.getElementById "select_all_button"
     selectAllButton.onclick = ->
         console.log("pushed select all button")
-        
+        for i in [1..document.body.childNodes[5].childNodes.length-3]
+            document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = true
     #cancel all button
     cancelAllButton = document.getElementById "cancel_all_button"
     cancelAllButton.onclick = ->
         console.log("pushed cancel all button")
-        
+        for i in [1..document.body.childNodes[5].childNodes.length-3]
+            document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = false
+
     #save button
     saveAllButton = document.getElementById "save_button"
     saveAllButton.onclick = ->
@@ -115,7 +119,7 @@ window.onload = ->
 
     #ImageData
     imageBox = document.getElementById "image_data"
-    imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length-1]
+    window.imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length-1]
 ###
 ==================================================
 ###

@@ -29,10 +29,15 @@ body {
 #select_all_button {
   font-size: large;
 }
-#cancel_all_button,
-font-size: large,
-#save_button,
-#button,
+#cancel_all_button {
+  font-size: large;
+}
+#save_button {
+  font-size: large;
+}
+#button {
+  font-size: large;
+}
 #add_button {
   color: #000;
   font-size: x-large;

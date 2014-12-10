@@ -4,9 +4,9 @@
  */
 
 (function() {
-  var ImageData, imageData;
+  var ImageData;
 
-  imageData = [];
+  window.imageData = [];
 
 
   /*
@@ -21,6 +21,7 @@
       var br, chbox, child_num, deleteButton, div, hrEnd, hrMid, imageName, img, newChild, parentDiv, saveButton, script, tweetButton;
       parentDiv = refChild.parentNode;
       newChild = document.createElement("div");
+      newChild.id = "box";
       newChild.style = "display:inline;";
       child_num = i;
       div = document.createElement("div");
@@ -38,7 +39,7 @@
         return parentDiv.removeChild(newChild);
       };
       chbox = document.createElement("div");
-      chbox.innerHTML = '<input type="checkbox">';
+      chbox.innerHTML = '<input type="checkbox"name="checkbox">';
       imageName = document.createElement("textarea");
       imageName.value = 'sample.png';
       imageName.cols = "25";
@@ -82,6 +83,10 @@
       parentDiv.insertBefore(newChild, refChild);
     }
 
+    ImageData.prototype.check = function() {
+      return this.chbox.checked = true;
+    };
+
     return ImageData;
 
   })();
@@ -108,11 +113,23 @@
     var addButton, cancelAllButton, i, imageBox, saveAllButton, selectAllButton, _i, _ref, _results;
     selectAllButton = document.getElementById("select_all_button");
     selectAllButton.onclick = function() {
-      return console.log("pushed select all button");
+      var i, _i, _ref, _results;
+      console.log("pushed select all button");
+      _results = [];
+      for (i = _i = 1, _ref = document.body.childNodes[5].childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        _results.push(document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = true);
+      }
+      return _results;
     };
     cancelAllButton = document.getElementById("cancel_all_button");
     cancelAllButton.onclick = function() {
-      return console.log("pushed cancel all button");
+      var i, _i, _ref, _results;
+      console.log("pushed cancel all button");
+      _results = [];
+      for (i = _i = 1, _ref = document.body.childNodes[5].childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        _results.push(document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = false);
+      }
+      return _results;
     };
     saveAllButton = document.getElementById("save_button");
     saveAllButton.onclick = function() {
@@ -122,7 +139,7 @@
     imageBox = document.getElementById("image_data");
     _results = [];
     for (i = _i = 0, _ref = chrome.extension.getBackgroundPage().imageSrc.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-      _results.push(imageData[i] = new ImageData(imageBox, i));
+      _results.push(window.imageData[i] = new ImageData(imageBox, i));
     }
     return _results;
   };
