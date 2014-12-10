@@ -15,9 +15,14 @@ class ImageData
         newChild.style = "display:inline;"
         child_num = i
         
+        div = document.createElement("div")
+        div.style.width = "160px"
+        div.style.height = "160px"
+        div.id = "image_data_left"
         img = document.createElement("img")
         img.id = "image_data_left"
         img.src = chrome.extension.getBackgroundPage().imageSrc[child_num]
+        div.appendChild(img)
 
         deleteButton = document.createElement("img")
         deleteButton.id = "delete_button"
@@ -25,6 +30,9 @@ class ImageData
         deleteButton.onclick = ->
             parentDiv.removeChild(newChild)
             #chrome.runtime.sendMessage({name: "delete child",num: child_num})
+
+        chbox = document.createElement("div")
+        chbox.innerHTML = '<input type="checkbox">'
 
         imageName = document.createElement("textarea")
         imageName.value = 'sample.png'    #初期ファイル名を生成して代入したい
@@ -59,10 +67,12 @@ class ImageData
         br = document.createElement("br")
 
         newChild.appendChild(deleteButton)
-        newChild.appendChild(img)
+        newChild.appendChild(div)
+        newChild.appendChild(chbox)
         newChild.appendChild(imageName)
-        newChild.appendChild(hrMid)
+        newChild.appendChild(br)
         newChild.appendChild(saveButton)
+        newChild.appendChild(hrMid)
         newChild.appendChild(tweetButton)
         newChild.appendChild(hrEnd)
         parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入

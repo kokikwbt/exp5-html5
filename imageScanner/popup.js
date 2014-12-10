@@ -18,20 +18,27 @@
 
   ImageData = (function() {
     function ImageData(refChild, i) {
-      var br, child_num, deleteButton, hrEnd, hrMid, imageName, img, newChild, parentDiv, saveButton, script, tweetButton;
+      var br, chbox, child_num, deleteButton, div, hrEnd, hrMid, imageName, img, newChild, parentDiv, saveButton, script, tweetButton;
       parentDiv = refChild.parentNode;
       newChild = document.createElement("div");
       newChild.style = "display:inline;";
       child_num = i;
+      div = document.createElement("div");
+      div.style.width = "160px";
+      div.style.height = "160px";
+      div.id = "image_data_left";
       img = document.createElement("img");
       img.id = "image_data_left";
       img.src = chrome.extension.getBackgroundPage().imageSrc[child_num];
+      div.appendChild(img);
       deleteButton = document.createElement("img");
       deleteButton.id = "delete_button";
       deleteButton.src = "./image/deleteButton.png";
       deleteButton.onclick = function() {
         return parentDiv.removeChild(newChild);
       };
+      chbox = document.createElement("div");
+      chbox.innerHTML = '<input type="checkbox">';
       imageName = document.createElement("textarea");
       imageName.value = 'sample.png';
       imageName.cols = "25";
@@ -64,7 +71,8 @@
       hrEnd.id = "hr_end";
       br = document.createElement("br");
       newChild.appendChild(deleteButton);
-      newChild.appendChild(img);
+      newChild.appendChild(div);
+      newChild.appendChild(chbox);
       newChild.appendChild(imageName);
       newChild.appendChild(br);
       newChild.appendChild(saveButton);
