@@ -26,12 +26,22 @@ body
 	text-align: center
 	
 
-#button
+#select_all_button
 	font-size: large
+
+#cancel_all_button
+        font-size: large
+#save_button
+        font-size: large
+#button
+        font-size: large
 
 
 #add_button
 	color: #0
 	font-size: x-large
-#hr
+#hr_end
 	clear:both
+
+#hr_mid
+	color: ffa0a0

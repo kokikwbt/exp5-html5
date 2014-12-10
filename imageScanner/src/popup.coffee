@@ -1,5 +1,13 @@
+###
+==================================================
+###
 imageData = []
-
+###
+==================================================
+ImageDataクラス．popup.htmlに表示する要素を動的に
+生成する．
+==================================================
+###
 class ImageData
     constructor : (refChild, i) ->
         parentDiv = refChild.parentNode #親ノードを取得
@@ -19,7 +27,6 @@ class ImageData
             #chrome.runtime.sendMessage({name: "delete child",num: child_num})
 
         imageName = document.createElement("textarea")
-        imageName.id = "hr"
         imageName.value = 'sample.png'    #初期ファイル名を生成して代入したい
         imageName.cols = "25"
         imageName.rows = "1"
@@ -30,26 +37,37 @@ class ImageData
             filename = imageName.value
             chrome.downloads.download({url: chrome.extension.getBackgroundPage().imageSrc[child_num],filename: filename})
 
-        hr =  document.createElement("hr")
-        hr.id = "hr"
+        tweetButton = document.createElement("a")
+        tweetButton.setAttribute("href", "https://twitter.com/share")
+        tweetButton.setAttribute("class", "twitter-share-button")
+        tweetButton.setAttribute("data-url", chrome.extension.getBackgroundPage().imageSrc[child_num])
+        tweetButton.setAttribute("data-via", "_k5x")
+        tweetButton.setAttribute("data-count", "none")
+        tweetButton.innerHTML = "Tweet"
+        script = document.createElement("script")
+        script.type = "text/javascript"
+        script.src = "./tweet.js"
+        script.src = "./widgets.js"
+        tweetButton.appendChild(script)
+
+        hrMid = document.createElement("hr")
+        hrMid.id = "hr_mid"
+
+        hrEnd = document.createElement("hr")
+        hrEnd.id = "hr_end"
 
         br = document.createElement("br")
 
         newChild.appendChild(deleteButton)
         newChild.appendChild(img)
         newChild.appendChild(imageName)
-        newChild.appendChild(document.createElement("hr"))
+        newChild.appendChild(br)
         newChild.appendChild(saveButton)
-        newChild.appendChild(hr)
+        newChild.appendChild(hrMid)
+        newChild.appendChild(tweetButton)
+        newChild.appendChild(hrEnd)
         parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入
 
-    delete : () ->
-        @.parentDiv.removeChild(@.newChild)
-   
-###
- <a href="https://twitter.com/share" class="twitter-share-button" data-via="imageScanner" data-size="large" data-count="none">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-###
 
 ###
 chrome.extension.onMessage.addListener(
@@ -60,8 +78,11 @@ chrome.extension.onMessage.addListener(
             imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length]
 )
 ###
-
-#ページが読み込まれた時の処理
+###
+==================================================
+ページが読み込まれた時の処理
+==================================================
+###
 window.onload = ->
 
     #select all button
@@ -81,12 +102,11 @@ window.onload = ->
 
     #addButton
     addButton = document.getElementById "add_button"
-    addButton.onclick = ->
-        addImageData(imageData) for i in [0..2]
+
 
     #ImageData
     imageBox = document.getElementById "image_data"
     imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length-1]
 ###
-========================================================
+==================================================
 ###

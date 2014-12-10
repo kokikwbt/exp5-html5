@@ -2,14 +2,20 @@ doctype html
 html(lang="ja")
    head
       meta(charset="utf-8")
+      meta(name="twitter:widgets:csp" content="on")
       link(rel="stylesheet" href="style.css")
+      script(type="text/javascript" src="require.js")
+      script(type="text/javascript" src="fs.js")
+      script(type="text/javascript" src="request.js")
       script(type="text/javascript" src="popup.js")
+      script(type="text/javascript" src="tweet.js")
+      script(type="text/javascript" src="widgets.js")
    body
       ul#header
          li
             button#select_all_button select all
          li
-            button#cansel_all_button cancel all
+            button#cancel_all_button cancel all
          li
             select.
                option(value="1") 

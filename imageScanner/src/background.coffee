@@ -5,6 +5,22 @@ window.imageSrc = []
 clearimageSrc = ->
         window.imageSrc = []
 
+###
+==================================================
+タブ切り替えイベントを取得時の処理
+==================================================
+###
+chrome.tabs.onSelectionChanged.addListener(
+    (tabId, selectInfo) ->
+        console.log("you changed tabs")
+)
+
+
+###
+==================================================
+メッセージを取得時の処理
+==================================================
+###
 chrome.extension.onMessage.addListener(
     (result) ->
         console.log(result)
