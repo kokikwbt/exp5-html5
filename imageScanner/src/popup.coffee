@@ -114,7 +114,7 @@ window.onload = ->
         console.log("pushed save all button")
         for i in [1..document.body.childNodes[5].childNodes.length-3]
             if document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked
-                chrome.downloads.download({url: chrome.extension.getBackgroundPage().imageSrc[i-1], filename: document.body.childNodes[5].childNodes[i].childNodes[3].value})
+                chrome.downloads.download({url: document.body.childNodes[5].childNodes[1].childNodes[1].childNodes[0].src, filename: document.body.childNodes[5].childNodes[i].childNodes[3].value})
 
 
     #addButton
