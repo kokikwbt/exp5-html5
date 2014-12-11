@@ -139,7 +139,7 @@
       for (i = _i = 1, _ref = document.body.childNodes[5].childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
         if (document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked) {
           _results.push(chrome.downloads.download({
-            url: document.body.childNodes[5].childNodes[1].childNodes[1].childNodes[0].src,
+            url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src,
             filename: document.body.childNodes[5].childNodes[i].childNodes[3].value
           }));
         } else {
