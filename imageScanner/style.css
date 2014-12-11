@@ -13,7 +13,8 @@ body {
 }
 #image_data_left {
   float: left;
-  width: 150px;
+  max-width: 160px;
+  max-height: 160px;
 }
 #header li {
   list-style: none;
@@ -28,14 +29,22 @@ body {
 #select_all_button {
   font-size: large;
 }
-#cancel_all_button,
-font-size: large,
-#save_button,
-#button,
+#cancel_all_button {
+  font-size: large;
+}
+#save_button {
+  font-size: large;
+}
+#button {
+  font-size: large;
+}
 #add_button {
   color: #000;
   font-size: x-large;
 }
-#hr {
+#hr_end {
   clear: both;
+}
+#hr_mid {
+  color: ffa0a0;
 }

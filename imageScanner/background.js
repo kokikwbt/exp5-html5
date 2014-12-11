@@ -9,6 +9,24 @@
     return window.imageSrc = [];
   };
 
+
+  /*
+  ==================================================
+  タブ切り替えイベントを取得時の処理
+  ==================================================
+   */
+
+  chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) {
+    return console.log("you changed tabs");
+  });
+
+
+  /*
+  ==================================================
+  メッセージを取得時の処理
+  ==================================================
+   */
+
   chrome.extension.onMessage.addListener(function(result) {
     console.log(result);
     if (result.refresh === "refreshrequest") {

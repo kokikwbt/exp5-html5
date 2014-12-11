@@ -2,8 +2,12 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8">
+    <meta name="twitter:widgets:csp" content="on">
     <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="require.js"></script>
     <script type="text/javascript" src="popup.js"></script>
+    <script type="text/javascript" src="tweet.js"></script>
+    <script type="text/javascript" src="widgets.js"></script>
   </head>
   <body>
     <ul id="header">
@@ -24,7 +28,7 @@
       </li>
     </ul>
     <hr>
-    <div style="height:400px;width:100%;overflow-y:scroll;overflow-x:hidden">
+    <div id="main" style="height:400px;width:100%;overflow-y:scroll;overflow-x:hidden">
       <li id="image_data"></li>
     </div>
     <hr>

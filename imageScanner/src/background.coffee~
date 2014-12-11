@@ -1,10 +1,14 @@
 console.log(window)
 
 window.imageSrc = []
-window.mylength = 0
 
 clearimageSrc = ->
         window.imageSrc = []
+
+chrome.tabs.onSelectionChanged.addListener(
+    (tabId, selectInfo) ->
+        chrome.runtime.sendMessage({name: "change tab"})
+)
 
 chrome.extension.onMessage.addListener(
     (result) ->
@@ -18,11 +22,8 @@ chrome.extension.onMessage.addListener(
         else if result.name == "delete child"
             window.imageSrc.splice(result.num, 1)
             console.log(window.imageSrc.length)
-            mylength = window.imageSrc.length
             chrome.browserAction.setBadgeText({text: String(window.imageSrc.length)})
             chrome.runtime.sendMessage({name: "refresh after delete"})
         else 
             window.imageSrc = result.image
-            mylength = window.mylength
-            console.log (window.mylength)
 )
