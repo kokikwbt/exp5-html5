@@ -9,17 +9,6 @@ ImageDataクラス．popup.htmlに表示する要素を動的に
 ==================================================
 ###
 class ImageData
-    @parentDiv = 0
-    @newChild = 0
-    @child_num = 0
-    @div = 0
-    @img = 0
-    @deleteButton = 0
-    @chbox = 0
-    @imageName = 0
-    @saveButton = 0
-    @tweetButton = 0
-
     constructor : (refChild, i) ->
         parentDiv = refChild.parentNode #親ノードを取得
         newChild = document.createElement("div") #子ノードを生成
@@ -45,7 +34,6 @@ class ImageData
 
         chbox = document.createElement("div")
         chbox.innerHTML = '<input type="checkbox"name="checkbox">'
-#        console.log(chbox.checkbox.checked)
 
         imageName = document.createElement("textarea")
         imageName.value = 'sample.png'    #初期ファイル名を生成して代入したい
@@ -117,11 +105,17 @@ window.onload = ->
     cancelAllButton = document.getElementById "cancel_all_button"
     cancelAllButton.onclick = ->
         console.log("pushed cancel all button")
-        
+        for i in [1..document.body.childNodes[5].childNodes.length-3]
+            document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = false
+
     #save button
     saveAllButton = document.getElementById "save_button"
     saveAllButton.onclick = ->
         console.log("pushed save all button")
+        for i in [1..document.body.childNodes[5].childNodes.length-3]
+            if document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked
+                chrome.downloads.download({})
+
 
     #addButton
     addButton = document.getElementById "add_button"
