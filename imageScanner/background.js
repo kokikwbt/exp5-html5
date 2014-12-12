@@ -16,8 +16,17 @@
   ==================================================
    */
 
-  chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) {
-    return console.log("you changed tabs");
+  chrome.tabs.onActivated.addListener(function(activeInfo) {
+    console.log("you changed tabs");
+    console.log(activeInfo.tabId);
+    return chrome.tabs.getSelected(null, function(tab) {
+      return chrome.tabs.sendRequest(activeInfo.tabId, {
+        changed: "changed"
+      }, function(response) {
+        console.log(response);
+        return console.log("test");
+      });
+    });
   });
 
 

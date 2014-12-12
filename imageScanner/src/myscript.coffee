@@ -61,8 +61,6 @@ getImgSrcMainArticle = ->
 	chrome.runtime.sendMessage({name: "image num",num: img.length})
 	chrome.runtime.sendMessage({image:img})
 
-
-
 main = ->
 	console.log(document.images)
 	console.log(document.images.length)
@@ -74,4 +72,8 @@ main = ->
 		getImgSrc()
 
 main()
-
+chrome.extension.onRequest.addListener(
+    (request,sender,sendResponse) ->
+        sendResponse({farewell:"goodbye"})
+        main()
+)

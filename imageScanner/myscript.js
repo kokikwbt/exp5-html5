@@ -82,4 +82,11 @@
 
   main();
 
+  chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+    sendResponse({
+      farewell: "goodbye"
+    });
+    return main();
+  });
+
 }).call(this);
