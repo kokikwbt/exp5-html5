@@ -31,6 +31,9 @@
       img = document.createElement("img");
       img.id = "image_data_left";
       img.src = chrome.extension.getBackgroundPage().imageSrc[child_num];
+      img.onclick = function() {
+        return window.open(img.src);
+      };
       div.appendChild(img);
       deleteButton = document.createElement("img");
       deleteButton.id = "delete_button";
@@ -133,7 +136,20 @@
     };
     saveAllButton = document.getElementById("save_button");
     saveAllButton.onclick = function() {
-      return console.log("pushed save all button");
+      var i, _i, _ref, _results;
+      console.log("pushed save all button");
+      _results = [];
+      for (i = _i = 1, _ref = document.body.childNodes[5].childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        if (document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked) {
+          _results.push(chrome.downloads.download({
+            url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src,
+            filename: document.body.childNodes[5].childNodes[i].childNodes[3].value
+          }));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
     };
     addButton = document.getElementById("add_button");
     imageBox = document.getElementById("image_data");

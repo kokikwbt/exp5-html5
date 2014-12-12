@@ -23,6 +23,8 @@ class ImageData
         img = document.createElement("img")
         img.id = "image_data_left"
         img.src = chrome.extension.getBackgroundPage().imageSrc[child_num]
+        img.onclick = ->
+            window.open(img.src)
         div.appendChild(img)
 
         deleteButton = document.createElement("img")
@@ -112,6 +114,10 @@ window.onload = ->
     saveAllButton = document.getElementById "save_button"
     saveAllButton.onclick = ->
         console.log("pushed save all button")
+        for i in [1..document.body.childNodes[5].childNodes.length-3]
+            if document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked
+                chrome.downloads.download({url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src, filename: document.body.childNodes[5].childNodes[i].childNodes[3].value})
+
 
     #addButton
     addButton = document.getElementById "add_button"
