@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <meta name="twitter:widgets:csp" content="on">
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="require.js"></script>
+    <script type="text/javascript" src="jszip.js"></script>
     <script type="text/javascript" src="popup.js"></script>
-    <script type="text/javascript" src="tweet.js"></script>
-    <script type="text/javascript" src="widgets.js"></script>
   </head>
   <body>
     <ul id="header">
@@ -18,9 +16,9 @@
         <button id="cancel_all_button">cancel all</button>
       </li>
       <li>
-        <select>
-          option(value="1") 
-          option(value="2") Documents
+        <select id="format" name="format">
+          <option value='default' selected>default</option>
+          <option value='zip'>zip</option>
         </select>
       </li>
       <li>
@@ -28,7 +26,7 @@
       </li>
     </ul>
     <hr>
-    <div id="main" style="height:400px;width:100%;overflow-y:scroll;overflow-x:hidden">
+    <div id="main">
       <li id="image_data"></li>
     </div>
     <hr>

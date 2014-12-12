@@ -4,15 +4,16 @@
  */
 
 (function() {
-  var ImageData;
+  var ImageData, create_zip;
 
   window.imageData = [];
 
 
   /*
   ==================================================
-  ImageDataクラス．popup.htmlに表示する要素を動的に
-  生成する．
+  ImageDataクラス．読み込んだ画像１枚ごとに各html要素
+  を１つのまとまりとして動的に生成しpopup.htmlに表示
+  する．
   ==================================================
    */
 
@@ -61,7 +62,6 @@
       tweetButton.setAttribute("href", "https://twitter.com/share");
       tweetButton.setAttribute("class", "twitter-share-button");
       tweetButton.setAttribute("data-url", chrome.extension.getBackgroundPage().imageSrc[child_num]);
-      tweetButton.setAttribute("data-via", "_k5x");
       tweetButton.setAttribute("data-count", "none");
       tweetButton.innerHTML = "Tweet";
       script = document.createElement("script");
@@ -86,24 +86,28 @@
       parentDiv.insertBefore(newChild, refChild);
     }
 
-    ImageData.prototype.check = function() {
-      return this.chbox.checked = true;
-    };
-
     return ImageData;
 
   })();
 
 
   /*
-  chrome.extension.onMessage.addListener(
-      (result) ->
-          if result.name == "refresh after delete"
-              imageData = splice(imageData.length)
-              imageBox = document.getElementById "image_data"
-              imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length]
-  )
+  ==================================================
+  zipファイル生成
+  ==================================================
    */
+
+  create_zip = function() {
+    var content, zip;
+    zip = new JSZip();
+    zip.file("hello1.txt", "Hello First World\n");
+    zip.file("hello2.txt", "Hello Second World\n");
+    content = zip.generate();
+    location.href = "data:application/zip;base64," + content;
+    return chrome.downloads.download({
+      url: "data:application/zip;base64," + content
+    });
+  };
 
 
   /*
@@ -113,7 +117,13 @@
    */
 
   window.onload = function() {
-    var addButton, cancelAllButton, i, imageBox, saveAllButton, selectAllButton, _i, _ref, _results;
+
+    /*
+    -----------------
+    select all button
+    -----------------
+     */
+    var addButton, cancelAllButton, format, i, imageBox, saveAllButton, selectAllButton, _i, _ref;
     selectAllButton = document.getElementById("select_all_button");
     selectAllButton.onclick = function() {
       var i, _i, _ref, _results;
@@ -124,6 +134,12 @@
       }
       return _results;
     };
+
+    /*
+    -----------------
+    cancel all button
+    -----------------
+     */
     cancelAllButton = document.getElementById("cancel_all_button");
     cancelAllButton.onclick = function() {
       var i, _i, _ref, _results;
@@ -134,30 +150,58 @@
       }
       return _results;
     };
+
+    /*
+    -----------
+    save button
+    -----------
+     */
     saveAllButton = document.getElementById("save_button");
     saveAllButton.onclick = function() {
       var i, _i, _ref, _results;
-      console.log("pushed save all button");
-      _results = [];
-      for (i = _i = 1, _ref = document.body.childNodes[5].childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-        if (document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked) {
-          _results.push(chrome.downloads.download({
-            url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src,
-            filename: document.body.childNodes[5].childNodes[i].childNodes[3].value
-          }));
-        } else {
-          _results.push(void 0);
+      if (document.getElementById("format").value === "default") {
+        _results = [];
+        for (i = _i = 1, _ref = document.body.childNodes[5].childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+          if (document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked) {
+            _results.push(chrome.downloads.download({
+              url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src,
+              filename: document.body.childNodes[5].childNodes[i].childNodes[3].value
+            }));
+          } else {
+            _results.push(void 0);
+          }
         }
+        return _results;
       }
-      return _results;
     };
+
+    /*
+    ---------
+    addButton
+    ---------
+     */
     addButton = document.getElementById("add_button");
+    addButton.onclick = function() {
+      return create_zip();
+    };
+
+    /*
+    ---------
+    ImageData
+    ---------
+     */
     imageBox = document.getElementById("image_data");
-    _results = [];
     for (i = _i = 0, _ref = chrome.extension.getBackgroundPage().imageSrc.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-      _results.push(window.imageData[i] = new ImageData(imageBox, i));
+      window.imageData[i] = new ImageData(imageBox, i);
     }
-    return _results;
+
+    /*
+    ---------
+    
+    ---------
+     */
+    format = document.getElementById("format");
+    return console.log(format.value);
   };
 
 

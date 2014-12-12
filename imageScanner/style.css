@@ -1,7 +1,13 @@
 body {
   background-color: #800000;
   width: 400px;
-  height: 500px;
+  height: 550px;
+}
+#main {
+  height: 480px;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 #image_data {
   list-style: none;

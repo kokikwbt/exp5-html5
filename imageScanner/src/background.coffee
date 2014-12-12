@@ -38,3 +38,14 @@ chrome.extension.onMessage.addListener(
         else 
             window.imageSrc = result.image
 )
+
+###
+==================================================
+右クリックメニューに追加する処理
+==================================================
+###
+chrome.contextMenus.create({
+    title: "画像を再読み込み"
+    onclick: ->
+        chrome.tabs.reload()
+})

@@ -23,6 +23,8 @@ class ImageData
         img = document.createElement("img")
         img.id = "image_data_left"
         img.src = chrome.extension.getBackgroundPage().imageSrc[child_num]
+        img.onclick = ->
+            window.open(img.src)
         div.appendChild(img)
 
         deleteButton = document.createElement("img")
@@ -50,7 +52,7 @@ class ImageData
         tweetButton.setAttribute("href", "https://twitter.com/share")
         tweetButton.setAttribute("class", "twitter-share-button")
         tweetButton.setAttribute("data-url", chrome.extension.getBackgroundPage().imageSrc[child_num])
-        tweetButton.setAttribute("data-via", "_k5x")
+        #tweetButton.setAttribute("data-via", "_k5x")
         tweetButton.setAttribute("data-count", "none")
         tweetButton.innerHTML = "Tweet"
         script = document.createElement("script")
@@ -91,6 +93,20 @@ chrome.extension.onMessage.addListener(
 ###
 ###
 ==================================================
+zipファイル生成
+==================================================
+###
+
+create_zip = ->
+    zip = new JSZip()
+    zip.file("hello1.txt", "Hello First World\n")
+    zip.file("hello2.txt", "Hello Second World\n")
+    content = zip.generate()
+    location.href="data:application/zip;base64," + content;
+    chrome.downloads.download({url: "data:application/zip;base64," + content})
+
+###
+==================================================
 ページが読み込まれた時の処理
 ==================================================
 ###
@@ -101,6 +117,7 @@ window.onload = ->
         console.log("pushed select all button")
         for i in [1..document.body.childNodes[5].childNodes.length-3]
             document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = true
+
     #cancel all button
     cancelAllButton = document.getElementById "cancel_all_button"
     cancelAllButton.onclick = ->
@@ -114,16 +131,19 @@ window.onload = ->
         console.log("pushed save all button")
         for i in [1..document.body.childNodes[5].childNodes.length-3]
             if document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked
-                chrome.downloads.download({})
+                chrome.downloads.download({url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src, filename: document.body.childNodes[5].childNodes[i].childNodes[3].value})
 
 
     #addButton
     addButton = document.getElementById "add_button"
-
+    addButton.onclick = ->
+        create_zip()
 
     #ImageData
     imageBox = document.getElementById "image_data"
     window.imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length-1]
+
+
 ###
 ==================================================
 ###
