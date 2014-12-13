@@ -10,9 +10,17 @@ clearimageSrc = ->
 タブ切り替えイベントを取得時の処理
 ==================================================
 ###
-chrome.tabs.onSelectionChanged.addListener(
-    (tabId, selectInfo) ->
+chrome.tabs.onActivated.addListener(
+    (activeInfo) ->
         console.log("you changed tabs")
+        chrome.tabs.getSelected(null,
+            (tab)->
+                chrome.tabs.sendRequest(activeInfo.tabId,{changed:"changed"},
+                    (response)->
+                        console.log(response)
+                        console.log("test")
+            )   
+        )
 )
 
 
