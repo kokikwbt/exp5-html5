@@ -198,8 +198,13 @@ window.onload = ->
     selectAllButton = document.getElementById "select_all_button"
     selectAllButton.onclick = ->
         console.log("pushed select all button")
-        for i in [1..document.getElementById("main").childNodes.length-3]
-            document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = true
+        if document.getElementById("main").style.display == "block"
+            for i in [1..document.getElementById("main").childNodes.length-3]
+                document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = true
+        else
+            for i in [1..document.getElementById("fav").childNodes.length-3]
+                document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked = true
+
 
     ###
     -----------------
@@ -209,9 +214,12 @@ window.onload = ->
     cancelAllButton = document.getElementById "cancel_all_button"
     cancelAllButton.onclick = ->
         console.log("pushed cancel all button")
-        for i in [1..document.getElementById("main").childNodes.length-3]
-            document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = false
-
+        if document.getElementById("main").style.display == "block"
+            for i in [1..document.getElementById("main").childNodes.length-3]
+                document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = false
+        else
+            for i in [1..document.getElementById("fav").childNodes.length-3]
+                document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked = false
     ###
     -----------
     save button
@@ -220,10 +228,14 @@ window.onload = ->
     saveAllButton = document.getElementById "save_button"
     saveAllButton.onclick = ->
         if document.getElementById("format").value == "default"
-            for i in [1..document.getElementById("main").childNodes.length-3]
-                if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
-                    chrome.downloads.download({url: document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("main").childNodes[i].childNodes[3].value})
-
+            if document.getElementById("main").style.display == "block" 
+                for i in [1..document.getElementById("main").childNodes.length-3]
+                    if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
+                        chrome.downloads.download({url: document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("main").childNodes[i].childNodes[3].value})
+            else
+                for i in [1..document.getElementById("fav").childNodes.length-3]
+                    if document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked
+                        chrome.downloads.download({url: document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("main").childNodes[i].childNodes[3].value})
 
     ###
     ---------

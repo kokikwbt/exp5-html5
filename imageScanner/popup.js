@@ -227,13 +227,21 @@
     var cancelAllButton, favBox, i, imageBox, saveAllButton, selectAllButton, tab1, tab2, _i, _j, _ref, _ref1;
     selectAllButton = document.getElementById("select_all_button");
     selectAllButton.onclick = function() {
-      var i, _i, _ref, _results;
+      var i, _i, _j, _ref, _ref1, _results, _results1;
       console.log("pushed select all button");
-      _results = [];
-      for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-        _results.push(document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = true);
+      if (document.getElementById("main").style.display === "block") {
+        _results = [];
+        for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+          _results.push(document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = true);
+        }
+        return _results;
+      } else {
+        _results1 = [];
+        for (i = _j = 1, _ref1 = document.getElementById("fav").childNodes.length - 3; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 1 <= _ref1 ? ++_j : --_j) {
+          _results1.push(document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked = true);
+        }
+        return _results1;
       }
-      return _results;
     };
 
     /*
@@ -243,13 +251,21 @@
      */
     cancelAllButton = document.getElementById("cancel_all_button");
     cancelAllButton.onclick = function() {
-      var i, _i, _ref, _results;
+      var i, _i, _j, _ref, _ref1, _results, _results1;
       console.log("pushed cancel all button");
-      _results = [];
-      for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-        _results.push(document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = false);
+      if (document.getElementById("main").style.display === "block") {
+        _results = [];
+        for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+          _results.push(document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = false);
+        }
+        return _results;
+      } else {
+        _results1 = [];
+        for (i = _j = 1, _ref1 = document.getElementById("fav").childNodes.length - 3; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 1 <= _ref1 ? ++_j : --_j) {
+          _results1.push(document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked = false);
+        }
+        return _results1;
       }
-      return _results;
     };
 
     /*
@@ -259,20 +275,35 @@
      */
     saveAllButton = document.getElementById("save_button");
     saveAllButton.onclick = function() {
-      var i, _i, _ref, _results;
+      var i, _i, _j, _ref, _ref1, _results, _results1;
       if (document.getElementById("format").value === "default") {
-        _results = [];
-        for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-          if (document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked) {
-            _results.push(chrome.downloads.download({
-              url: document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src,
-              filename: document.getElementById("main").childNodes[i].childNodes[3].value
-            }));
-          } else {
-            _results.push(void 0);
+        if (document.getElementById("main").style.display === "block") {
+          _results = [];
+          for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+            if (document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked) {
+              _results.push(chrome.downloads.download({
+                url: document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src,
+                filename: document.getElementById("main").childNodes[i].childNodes[3].value
+              }));
+            } else {
+              _results.push(void 0);
+            }
           }
+          return _results;
+        } else {
+          _results1 = [];
+          for (i = _j = 1, _ref1 = document.getElementById("fav").childNodes.length - 3; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 1 <= _ref1 ? ++_j : --_j) {
+            if (document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked) {
+              _results1.push(chrome.downloads.download({
+                url: document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src,
+                filename: document.getElementById("main").childNodes[i].childNodes[3].value
+              }));
+            } else {
+              _results1.push(void 0);
+            }
+          }
+          return _results1;
         }
-        return _results;
       }
     };
 
