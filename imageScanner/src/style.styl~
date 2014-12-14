@@ -7,13 +7,13 @@ body
         padding: 10px
         text-align: center
         text-decoration: none
-        background-image:linear-gradient(#f7fbfc,#d9edf2,#add9e4)
+        background-color:#f7fbfc
 #tab2
         margin: 0px 1px 0px 0px
         padding: 10px
         text-align: center
         text-decoration: none
-        background-image:linear-gradient(#f0e68c,#ffd700)
+        background-color:#f0e68c
 #main
         max-height: 480px
         width: 100%

@@ -3,6 +3,8 @@
 ###
 window.imageData = []
 favData = []
+fav = []
+console.log(fav)
 ###
 ==================================================
 ImageDataクラス．読み込んだ画像１枚ごとに各html要素
@@ -68,8 +70,15 @@ class ImageData
         favButton.style.height = "20px"
         favButton.onclick = ->
             favButton.src = "./image/fav.png"
+            if localStorage.length == 0
+                fav = [img.src]
+                localStorage.setItem("fav", JSON.stringify(fav))
+            else
+                fav = JSON.parse(localStorage.getItem("fav"))
+                fav.push(img.src)
+                localStorage.setItem("fav", JSON.stringify(fav))
             favBox = document.getElementById "fav_data"
-            favData.push(new FavData(favBox, chrome.extension.getBackgroundPage().imageSrc[child_num]))
+            favData.push(new FavData(favBox, img.src))
 
         hrMid = document.createElement("hr")
         hrMid.id = "hr_mid"
@@ -105,8 +114,9 @@ class FavData
         div = document.createElement "div"
         div.style.width = "160px"
         div.style.height = "160px"
-        div.id = "image_data_left"        
+        div.id = "fav_data_left"        
         img = document.createElement "img"
+        img.id = "fav_data_left"
         img.src = src
         img.onclick = ->
             window.open img.src
@@ -234,9 +244,14 @@ window.onload = ->
 
     ###
     ---------
-    favButton
+    favData
     ---------
     ###
+    if localStorage.length > 0
+        fav = JSON.parse(localStorage.getItem("fav"))
+        favBox = document.getElementById "fav_data"
+        if fav[i] != "undefined"
+            favData[i] = new FavData(favBox, fav[i]) for i in [0..fav.length-1]
 
     ###
     ----------

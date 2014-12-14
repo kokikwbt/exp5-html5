@@ -18,7 +18,6 @@
 
   chrome.tabs.onActivated.addListener(function(activeInfo) {
     console.log("you changed tabs");
-    console.log(activeInfo.tabId);
     return chrome.tabs.getSelected(null, function(tab) {
       return chrome.tabs.sendRequest(activeInfo.tabId, {
         changed: "changed"

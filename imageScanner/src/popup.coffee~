@@ -2,7 +2,8 @@
 ==================================================
 ###
 window.imageData = []
-window.favData = []
+favData = []
+fav = []
 ###
 ==================================================
 ImageDataクラス．読み込んだ画像１枚ごとに各html要素
@@ -68,8 +69,12 @@ class ImageData
         favButton.style.height = "20px"
         favButton.onclick = ->
             favButton.src = "./image/fav.png"
+            fav = JSON.parse(localStorage.getItem("fav"))
+            fav.push(img.src)
+            JSON.stringify(fav)
+            localStorage.setItem("fav", fav)
             favBox = document.getElementById "fav_data"
-            window.favData.push(new FavData(favBox, chrome.extension.getBackgroundPage().imageSrc[child_num]))
+            favData.push(new FavData(favBox, img.src))
 
         hrMid = document.createElement("hr")
         hrMid.id = "hr_mid"
@@ -93,6 +98,7 @@ class ImageData
 
 ###
 ==================================================
+FavDataクラス
 ==================================================
 ###
 class FavData
@@ -100,11 +106,63 @@ class FavData
         parentDiv = refChild.parentNode
         newChild = document.createElement("div")
         newChild.style = "display:inline;"
-        
+
+        div = document.createElement "div"
+        div.style.width = "160px"
+        div.style.height = "160px"
+        div.id = "image_data_left"        
         img = document.createElement "img"
         img.src = src
+        img.onclick = ->
+            window.open img.src
+        div.appendChild img
+
+        deleteButton = document.createElement "img"
+        deleteButton.src = "./image/deleteButton.png"
+        deleteButton.id = "delete_button"
+        deleteButton.onclick = ->
+            parentDiv.removeChild(newChild)
+
+        chbox = document.createElement "div"
+        chbox.innerHTML = '<input type="checkbox" name="checkbox">'
+
+        imageName = document.createElement "textarea"
+        imageName.value = 'default'
+        imageName.cols = "25"
+        imageName.rows = "1"
+
+        saveButton = document.createElement "button"
+        saveButton.innerHTML = "save"
+        saveButton.onclick = ->
+            filename = imageName.value
+            chrome.downloads.download({url: img.src, filename: filename})
+
+        tweetButton = document.createElement "a"
+        tweetButton.setAttribute("href", "https://twitter.com/share")
+        tweetButton.setAttribute("class", "twitter-share-button")
+        tweetButton.setAttribute("data-url", img.src)
+        tweetButton.innerHTML = "Tweet"
+        script = document.createElement "script"
+        script.type = "text/javascript"
+        script.src = "./tweet.js"
+        script.src = "./widgets.js"
+        tweetButton.appendChild script
+
+        hrMid = document.createElement "hr"
+        hrMid.id = "hr_mid"
+        hrEnd = document.createElement "hr"
+        hrEnd.id = "hr_end"
+        br = document.createElement "br"
         
-        newChild.appendChild img
+        newChild.appendChild deleteButton
+        newChild.appendChild div
+        newChild.appendChild chbox
+        newChild.appendChild imageName
+        newChild.appendChild br
+        newChild.appendChild saveButton
+        newChild.appendChild hrMid
+        newChild.appendChild tweetButton
+        newChild.appendChild hrEnd
         parentDiv.insertBefore(newChild,refChild)
 
 ###
@@ -181,9 +239,13 @@ window.onload = ->
 
     ###
     ---------
-    favButton
+    favData
     ---------
     ###
+    if localStorage.length > 0
+        fav = JSON.parse(localStorage.getItem("fav"))
+        favBox = document.getElementById "fav_data"
+        favData[i] = new FavData(favBox, fav[i]) for i in [0..localStorage.length]
 
     ###
     ----------
@@ -195,13 +257,11 @@ window.onload = ->
     document.getElementById("main").style.display = "block"
     tab1 = document.getElementById "tab1"
     tab1.onclick = ->
-        document.getElementById("main").style.display = "none"
         document.getElementById("fav").style.display = "none"
         document.getElementById("main").style.display = "block"
     tab2 = document.getElementById "tab2"
     tab2.onclick = ->
         document.getElementById("main").style.display = "none"
-        document.getELementById("fav").style.display = "none"
         document.getElementById("fav").style.display = "block"
 
 ###

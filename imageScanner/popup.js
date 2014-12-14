@@ -4,11 +4,15 @@
  */
 
 (function() {
-  var FavData, ImageData, create_zip, favData;
+  var FavData, ImageData, create_zip, fav, favData;
 
   window.imageData = [];
 
   favData = [];
+
+  fav = [];
+
+  console.log(fav);
 
 
   /*
@@ -77,8 +81,16 @@
       favButton.onclick = function() {
         var favBox;
         favButton.src = "./image/fav.png";
+        if (localStorage.length === 0) {
+          fav = [img.src];
+          localStorage.setItem("fav", JSON.stringify(fav));
+        } else {
+          fav = JSON.parse(localStorage.getItem("fav"));
+          fav.push(img.src);
+          localStorage.setItem("fav", JSON.stringify(fav));
+        }
         favBox = document.getElementById("fav_data");
-        return favData.push(new FavData(favBox, chrome.extension.getBackgroundPage().imageSrc[child_num]));
+        return favData.push(new FavData(favBox, img.src));
       };
       hrMid = document.createElement("hr");
       hrMid.id = "hr_mid";
@@ -118,8 +130,9 @@
       div = document.createElement("div");
       div.style.width = "160px";
       div.style.height = "160px";
-      div.id = "image_data_left";
+      div.id = "fav_data_left";
       img = document.createElement("img");
+      img.id = "fav_data_left";
       img.src = src;
       img.onclick = function() {
         return window.open(img.src);
@@ -211,7 +224,7 @@
     select all button
     -----------------
      */
-    var cancelAllButton, i, imageBox, saveAllButton, selectAllButton, tab1, tab2, _i, _ref;
+    var cancelAllButton, favBox, i, imageBox, saveAllButton, selectAllButton, tab1, tab2, _i, _j, _ref, _ref1;
     selectAllButton = document.getElementById("select_all_button");
     selectAllButton.onclick = function() {
       var i, _i, _ref, _results;
@@ -281,9 +294,18 @@
 
     /*
     ---------
-    favButton
+    favData
     ---------
      */
+    if (localStorage.length > 0) {
+      fav = JSON.parse(localStorage.getItem("fav"));
+      favBox = document.getElementById("fav_data");
+      if (fav[i] !== "undefined") {
+        for (i = _j = 0, _ref1 = fav.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
+          favData[i] = new FavData(favBox, fav[i]);
+        }
+      }
+    }
 
     /*
     ----------
