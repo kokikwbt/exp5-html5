@@ -1,7 +1,31 @@
 body
-        background-color: #800000
+        background-color: #b0c4de
         width: 400px
-        height: 500px
+        max-height: 550px
+#tab1
+        margin: 0px 1px 0px 0px
+        padding: 10px
+        text-align: center
+        text-decoration: none
+        background-image:linear-gradient(#f7fbfc,#d9edf2,#add9e4)
+#tab2
+        margin: 0px 1px 0px 0px
+        padding: 10px
+        text-align: center
+        text-decoration: none
+        background-image:linear-gradient(#f0e68c,#ffd700)
+#main
+        max-height: 480px
+        width: 100%
+        overflow-y: scroll
+        overflow-x: hidden
+        background-image:linear-gradient(#f7fbfc,#d9edf2,#add9e4)
+#fav
+        height: 480px
+        width: 100%
+        overflow-y: scroll
+        overflow-x: hidden
+        background-image:linear-gradient(#f0e68c,#ffd700)
 
 #image_data
         list-style:none
@@ -19,13 +43,6 @@ body
 #header li
         list-style:none
         display:inline
-
-#footer
-        color: #0
-        font-size: large
-        font-style: italic
-        text-align: center
-        
 
 #select_all_button
         font-size: large

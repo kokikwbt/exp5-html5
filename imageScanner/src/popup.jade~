@@ -13,18 +13,18 @@ html(lang="ja")
          li
             button#cancel_all_button cancel all
          li
-            select.
-               option(value="1") 
-               option(value="2") Documents
+            select(id="format",name="format").
+                <option value='default' selected>default</option>
+                <option value='zip'>zip</option>
          li
             button#save_button save
-
       hr
-      div#main(style="height:400px;width:100%;overflow-y:scroll;overflow-x:hidden")
-         
-         li#image_data
-
-      hr
-      div#footer
-         button#add_button +ADD
-
+      br
+      div#tabs.
+          <a href="#tab1" id="tab1">現在のページの画像</a>
+          <a href="#tab2" id="tab2">お気に入り</a>
+          
+      div#main
+         div#image_data
+      div#fav
+         div#image_data

@@ -2,6 +2,7 @@
 ==================================================
 ###
 window.imageData = []
+favData = []
 ###
 ==================================================
 ImageDataクラス．読み込んだ画像１枚ごとに各html要素
@@ -39,7 +40,7 @@ class ImageData
         chbox.innerHTML = '<input type="checkbox"name="checkbox">'
 
         imageName = document.createElement("textarea")
-        imageName.value = 'sample.png'    #初期ファイル名を生成して代入したい
+        imageName.value = 'default'    #初期ファイル名を生成して代入したい
         imageName.cols = "25"
         imageName.rows = "1"
   
@@ -62,6 +63,14 @@ class ImageData
         script.src = "./widgets.js"
         tweetButton.appendChild(script)
 
+        favButton = document.createElement("img")
+        favButton.src = "./image/unfav.png"
+        favButton.style.height = "20px"
+        favButton.onclick = ->
+            favButton.src = "./image/fav.png"
+            favBox = document.getElementById "fav_data"
+            favData.push(new FavData(favBox, chrome.extension.getBackgroundPage().imageSrc[child_num]))
+
         hrMid = document.createElement("hr")
         hrMid.id = "hr_mid"
 
@@ -78,8 +87,78 @@ class ImageData
         newChild.appendChild(saveButton)
         newChild.appendChild(hrMid)
         newChild.appendChild(tweetButton)
+        newChild.appendChild(favButton)
         newChild.appendChild(hrEnd)
         parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入
+
+###
+==================================================
+FavDataクラス
+==================================================
+###
+class FavData
+    constructor: (refChild, src) ->
+        parentDiv = refChild.parentNode
+        newChild = document.createElement("div")
+        newChild.style = "display:inline;"
+
+        div = document.createElement "div"
+        div.style.width = "160px"
+        div.style.height = "160px"
+        div.id = "image_data_left"        
+        img = document.createElement "img"
+        img.src = src
+        img.onclick = ->
+            window.open img.src
+        div.appendChild img
+
+        deleteButton = document.createElement "img"
+        deleteButton.src = "./image/deleteButton.png"
+        deleteButton.id = "delete_button"
+        deleteButton.onclick = ->
+            parentDiv.removeChild(newChild)
+
+        chbox = document.createElement "div"
+        chbox.innerHTML = '<input type="checkbox" name="checkbox">'
+
+        imageName = document.createElement "textarea"
+        imageName.value = 'default'
+        imageName.cols = "25"
+        imageName.rows = "1"
+
+        saveButton = document.createElement "button"
+        saveButton.innerHTML = "save"
+        saveButton.onclick = ->
+            filename = imageName.value
+            chrome.downloads.download({url: img.src, filename: filename})
+
+        tweetButton = document.createElement "a"
+        tweetButton.setAttribute("href", "https://twitter.com/share")
+        tweetButton.setAttribute("class", "twitter-share-button")
+        tweetButton.setAttribute("data-url", img.src)
+        tweetButton.innerHTML = "Tweet"
+        script = document.createElement "script"
+        script.type = "text/javascript"
+        script.src = "./tweet.js"
+        script.src = "./widgets.js"
+        tweetButton.appendChild script
+
+        hrMid = document.createElement "hr"
+        hrMid.id = "hr_mid"
+        hrEnd = document.createElement "hr"
+        hrEnd.id = "hr_end"
+        br = document.createElement "br"
+        
+        newChild.appendChild deleteButton
+        newChild.appendChild div
+        newChild.appendChild chbox
+        newChild.appendChild imageName
+        newChild.appendChild br
+        newChild.appendChild saveButton
+        newChild.appendChild hrMid
+        newChild.appendChild tweetButton
+        newChild.appendChild hrEnd
+        parentDiv.insertBefore(newChild,refChild)
 
 ###
 ==================================================
@@ -109,8 +188,8 @@ window.onload = ->
     selectAllButton = document.getElementById "select_all_button"
     selectAllButton.onclick = ->
         console.log("pushed select all button")
-        for i in [1..document.body.childNodes[5].childNodes.length-3]
-            document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = true
+        for i in [1..document.getElementById("main").childNodes.length-3]
+            document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = true
 
     ###
     -----------------
@@ -120,8 +199,8 @@ window.onload = ->
     cancelAllButton = document.getElementById "cancel_all_button"
     cancelAllButton.onclick = ->
         console.log("pushed cancel all button")
-        for i in [1..document.body.childNodes[5].childNodes.length-3]
-            document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = false
+        for i in [1..document.getElementById("main").childNodes.length-3]
+            document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = false
 
     ###
     -----------
@@ -131,9 +210,9 @@ window.onload = ->
     saveAllButton = document.getElementById "save_button"
     saveAllButton.onclick = ->
         if document.getElementById("format").value == "default"
-            for i in [1..document.body.childNodes[5].childNodes.length-3]
-                if document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked
-                    chrome.downloads.download({url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src, filename: document.body.childNodes[5].childNodes[i].childNodes[3].value})
+            for i in [1..document.getElementById("main").childNodes.length-3]
+                if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
+                    chrome.downloads.download({url: document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("main").childNodes[i].childNodes[3].value})
 
 
     ###
@@ -141,9 +220,9 @@ window.onload = ->
     addButton
     ---------
     ###
-    addButton = document.getElementById "add_button"
-    addButton.onclick = ->
-        create_zip()
+#    addButton = document.getElementById "add_button"
+#    addButton.onclick = ->
+#        create_zip(
 
     ###
     ---------
@@ -155,12 +234,26 @@ window.onload = ->
 
     ###
     ---------
-
+    favButton
     ---------
     ###
-    format = document.getElementById "format"
-    console.log(format.value)
 
+    ###
+    ----------
+     タブ設定
+    ----------
+    ###
+    document.getElementById("main").style.display = "none"
+    document.getElementById("fav").style.display = "none"
+    document.getElementById("main").style.display = "block"
+    tab1 = document.getElementById "tab1"
+    tab1.onclick = ->
+        document.getElementById("fav").style.display = "none"
+        document.getElementById("main").style.display = "block"
+    tab2 = document.getElementById "tab2"
+    tab2.onclick = ->
+        document.getElementById("main").style.display = "none"
+        document.getElementById("fav").style.display = "block"
 
 ###
 ==================================================

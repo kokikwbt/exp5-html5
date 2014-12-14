@@ -2,10 +2,12 @@
 ==================================================
 ###
 window.imageData = []
+window.favData = []
 ###
 ==================================================
-ImageDataクラス．popup.htmlに表示する要素を動的に
-生成する．
+ImageDataクラス．読み込んだ画像１枚ごとに各html要素
+を１つのまとまりとして動的に生成しpopup.htmlに表示
+する．
 ==================================================
 ###
 class ImageData
@@ -38,7 +40,7 @@ class ImageData
         chbox.innerHTML = '<input type="checkbox"name="checkbox">'
 
         imageName = document.createElement("textarea")
-        imageName.value = 'sample.png'    #初期ファイル名を生成して代入したい
+        imageName.value = 'default'    #初期ファイル名を生成して代入したい
         imageName.cols = "25"
         imageName.rows = "1"
   
@@ -61,6 +63,14 @@ class ImageData
         script.src = "./widgets.js"
         tweetButton.appendChild(script)
 
+        favButton = document.createElement("img")
+        favButton.src = "./image/unfav.png"
+        favButton.style.height = "20px"
+        favButton.onclick = ->
+            favButton.src = "./image/fav.png"
+            favBox = document.getElementById "fav_data"
+            window.favData.push(new FavData(favBox, chrome.extension.getBackgroundPage().imageSrc[child_num]))
+
         hrMid = document.createElement("hr")
         hrMid.id = "hr_mid"
 
@@ -77,20 +87,26 @@ class ImageData
         newChild.appendChild(saveButton)
         newChild.appendChild(hrMid)
         newChild.appendChild(tweetButton)
+        newChild.appendChild(favButton)
         newChild.appendChild(hrEnd)
         parentDiv.insertBefore(newChild, refChild)    #親ノードの末尾に挿入
 
-    check : ->
-        @.chbox.checked = true
 ###
-chrome.extension.onMessage.addListener(
-    (result) ->
-        if result.name == "refresh after delete"
-            imageData = splice(imageData.length)
-            imageBox = document.getElementById "image_data"
-            imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length]
-)
+==================================================
+==================================================
 ###
+class FavData
+    constructor: (refChild, src) ->
+        parentDiv = refChild.parentNode
+        newChild = document.createElement("div")
+        newChild.style = "display:inline;"
+        
+        img = document.createElement "img"
+        img.src = src
+        
+        newChild.appendChild img
+        parentDiv.insertBefore(newChild,refChild)
+
 ###
 ==================================================
 zipファイル生成
@@ -111,38 +127,82 @@ create_zip = ->
 ==================================================
 ###
 window.onload = ->
-    #select all button
+    ###
+    -----------------
+    select all button
+    -----------------
+    ###
     selectAllButton = document.getElementById "select_all_button"
     selectAllButton.onclick = ->
         console.log("pushed select all button")
-        for i in [1..document.body.childNodes[5].childNodes.length-3]
-            document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = true
+        for i in [1..document.getElementById("main").childNodes.length-3]
+            document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = true
 
-    #cancel all button
+    ###
+    -----------------
+    cancel all button
+    -----------------
+    ###
     cancelAllButton = document.getElementById "cancel_all_button"
     cancelAllButton.onclick = ->
         console.log("pushed cancel all button")
-        for i in [1..document.body.childNodes[5].childNodes.length-3]
-            document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked = false
+        for i in [1..document.getElementById("main").childNodes.length-3]
+            document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = false
 
-    #save button
+    ###
+    -----------
+    save button
+    -----------
+    ###
     saveAllButton = document.getElementById "save_button"
     saveAllButton.onclick = ->
-        console.log("pushed save all button")
-        for i in [1..document.body.childNodes[5].childNodes.length-3]
-            if document.body.childNodes[5].childNodes[i].childNodes[2].childNodes[0].checked
-                chrome.downloads.download({url: document.body.childNodes[5].childNodes[i].childNodes[1].childNodes[0].src, filename: document.body.childNodes[5].childNodes[i].childNodes[3].value})
+        if document.getElementById("format").value == "default"
+            for i in [1..document.getElementById("main").childNodes.length-3]
+                if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
+                    chrome.downloads.download({url: document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("main").childNodes[i].childNodes[3].value})
 
 
-    #addButton
-    addButton = document.getElementById "add_button"
-    addButton.onclick = ->
-        create_zip()
+    ###
+    ---------
+    addButton
+    ---------
+    ###
+#    addButton = document.getElementById "add_button"
+#    addButton.onclick = ->
+#        create_zip(
 
-    #ImageData
+    ###
+    ---------
+    ImageData
+    ---------
+    ###
     imageBox = document.getElementById "image_data"
     window.imageData[i] = new ImageData(imageBox, i) for i in [0..chrome.extension.getBackgroundPage().imageSrc.length-1]
 
+    ###
+    ---------
+    favButton
+    ---------
+    ###
+
+    ###
+    ----------
+     タブ設定
+    ----------
+    ###
+    document.getElementById("main").style.display = "none"
+    document.getElementById("fav").style.display = "none"
+    document.getElementById("main").style.display = "block"
+    tab1 = document.getElementById "tab1"
+    tab1.onclick = ->
+        document.getElementById("main").style.display = "none"
+        document.getElementById("fav").style.display = "none"
+        document.getElementById("main").style.display = "block"
+    tab2 = document.getElementById "tab2"
+    tab2.onclick = ->
+        document.getElementById("main").style.display = "none"
+        document.getELementById("fav").style.display = "none"
+        document.getElementById("fav").style.display = "block"
 
 ###
 ==================================================
