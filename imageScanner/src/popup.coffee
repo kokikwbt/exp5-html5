@@ -130,7 +130,7 @@ class FavData
             fav = []
             if document.getElementById("fav").childNodes.length > 3
                 for i in [1..document.getElementById("fav").childNodes.length-3]
-                    fav[i-1] = document.getElementById("fav").childNodes[i].childNodes[0].src
+                    fav[i-1] = document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src
             localStorage.clear("fav")
             localStorage.setItem("fav", JSON.stringify(fav))
         chbox = document.createElement "div"
