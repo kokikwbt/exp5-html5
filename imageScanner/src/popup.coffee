@@ -127,7 +127,12 @@ class FavData
         deleteButton.id = "delete_button"
         deleteButton.onclick = ->
             parentDiv.removeChild(newChild)
-
+            fav = []
+            if document.getElementById("fav").childNodes.length > 3
+                for i in [1..document.getElementById("fav").childNodes.length-3]
+                    fav[i-1] = document.getElementById("fav").childNodes[i].childNodes[0].src
+            localStorage.clear("fav")
+            localStorage.setItem("fav", JSON.stringify(fav))
         chbox = document.createElement "div"
         chbox.innerHTML = '<input type="checkbox" name="checkbox">'
 
@@ -176,10 +181,10 @@ zipファイル生成
 ==================================================
 ###
 
-create_zip = ->
+create_zip = (src) ->
     zip = new JSZip()
-    zip.file("hello1.txt", "Hello First World\n")
-    zip.file("hello2.txt", "Hello Second World\n")
+    for i in [0..src.length]
+        zip.add(src[i], imgData, {base64: true})    
     content = zip.generate()
     location.href="data:application/zip;base64," + content;
     chrome.downloads.download({url: "data:application/zip;base64," + content})
@@ -236,7 +241,25 @@ window.onload = ->
                 for i in [1..document.getElementById("fav").childNodes.length-3]
                     if document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked
                         chrome.downloads.download({url: document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("main").childNodes[i].childNodes[3].value})
-
+        else
+            if document.getElementById("main").style.display == "block"
+                zip = new JSZip()
+                for i in [1..document.getElementById("main").childNodes.length-3]
+                    if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
+                        xhr = new XMLHttpRequest()
+                        xhr.open('GET', document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, true)
+                        xhr.responseType = "arraybuffer"
+                        xhr.onreadystatechange = (evt) ->
+                            if (xhr.readyState == 4)
+                                if (xhr.status == 200) 
+                                    zip.file("default"+i+".png", xhr.response);       
+#                        zip.file("default"+i+"", document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, {base64: false})
+                        xhr.send()
+                content = zip.generate()
+                location.href="data:application/zip;base64," + content
+                chrome.downloads.download({url: "data:application/zip;base64," + content})
+            else
+                
     ###
     ---------
     addButton
@@ -262,7 +285,7 @@ window.onload = ->
     if localStorage.length > 0
         fav = JSON.parse(localStorage.getItem("fav"))
         favBox = document.getElementById "fav_data"
-        if fav[i] != "undefined"
+        if fav.length > 0
             favData[i] = new FavData(favBox, fav[i]) for i in [0..fav.length-1]
 
     ###

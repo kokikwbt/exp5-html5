@@ -27,4 +27,4 @@ html(lang="ja")
       div#main
          div#image_data
       div#fav
-         div#image_data
+         div#fav_data

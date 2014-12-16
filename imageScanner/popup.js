@@ -142,7 +142,16 @@
       deleteButton.src = "./image/deleteButton.png";
       deleteButton.id = "delete_button";
       deleteButton.onclick = function() {
-        return parentDiv.removeChild(newChild);
+        var i, _i, _ref;
+        parentDiv.removeChild(newChild);
+        fav = [];
+        if (document.getElementById("fav").childNodes.length > 3) {
+          for (i = _i = 1, _ref = document.getElementById("fav").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+            fav[i - 1] = document.getElementById("fav").childNodes[i].childNodes[0].src;
+          }
+        }
+        localStorage.clear("fav");
+        return localStorage.setItem("fav", JSON.stringify(fav));
       };
       chbox = document.createElement("div");
       chbox.innerHTML = '<input type="checkbox" name="checkbox">';
@@ -198,11 +207,14 @@
   ==================================================
    */
 
-  create_zip = function() {
-    var content, zip;
+  create_zip = function(src) {
+    var content, i, zip, _i, _ref;
     zip = new JSZip();
-    zip.file("hello1.txt", "Hello First World\n");
-    zip.file("hello2.txt", "Hello Second World\n");
+    for (i = _i = 0, _ref = src.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      zip.add(src[i], imgData, {
+        base64: true
+      });
+    }
     content = zip.generate();
     location.href = "data:application/zip;base64," + content;
     return chrome.downloads.download({
@@ -275,7 +287,7 @@
      */
     saveAllButton = document.getElementById("save_button");
     saveAllButton.onclick = function() {
-      var i, _i, _j, _ref, _ref1, _results, _results1;
+      var content, i, xhr, zip, _i, _j, _k, _ref, _ref1, _ref2, _results, _results1;
       if (document.getElementById("format").value === "default") {
         if (document.getElementById("main").style.display === "block") {
           _results = [];
@@ -304,6 +316,32 @@
           }
           return _results1;
         }
+      } else {
+        if (document.getElementById("main").style.display === "block") {
+          zip = new JSZip();
+          for (i = _k = 1, _ref2 = document.getElementById("main").childNodes.length - 3; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; i = 1 <= _ref2 ? ++_k : --_k) {
+            if (document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked) {
+              xhr = new XMLHttpRequest();
+              xhr.open('GET', document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, true);
+              xhr.responseType = "arraybuffer";
+              xhr.onreadystatechange = function(evt) {
+                if (xhr.readyState === 4) {
+                  if (xhr.status === 200) {
+                    return zip.file("default" + i + ".png", xhr.response);
+                  }
+                }
+              };
+              xhr.send();
+            }
+          }
+          content = zip.generate();
+          location.href = "data:application/zip;base64," + content;
+          return chrome.downloads.download({
+            url: "data:application/zip;base64," + content
+          });
+        } else {
+
+        }
       }
     };
 
@@ -331,7 +369,7 @@
     if (localStorage.length > 0) {
       fav = JSON.parse(localStorage.getItem("fav"));
       favBox = document.getElementById("fav_data");
-      if (fav[i] !== "undefined") {
+      if (fav.length > 0) {
         for (i = _j = 0, _ref1 = fav.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
           favData[i] = new FavData(favBox, fav[i]);
         }
