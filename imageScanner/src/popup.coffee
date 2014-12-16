@@ -254,19 +254,22 @@ window.onload = ->
                         xhr.open('GET', document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, true)
                         xhr.responseType = 'arraybuffer'
                         xhr.onload = (evt) ->
-                            arraybuffer = new Uint8Array(this.response)
+                            arraybuffer = this.response
 #                            tmpurl = document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src
 #                            filename = tmpurl.replace(/^(.*)\//,'')
                             zip.file(xhr_buffer + ".png", arraybuffer)
                             xhr_buffer++
                             console.log("xhr"+xhr_buffer)
                             if zip_buffer == xhr_buffer
-                                content = zip.generate()
-                                location.href="data:application/zip;base64," + content
-                                chrome.downloads.download({url: "data:application/zip;base64," + content})
+                                blob = zip.generate({type:"blob"})
+                                objectUrl =URL.createObjectURL(blob)
+                                chrome.downloads.download(
+                                    {url: objectUrl}
+                                    )
 
 #                        zip.file("default"+i+"", document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, {base64: false})
-                        
+                        xhr.onerror =(evt)->
+
                         xhr.send()
             else
                 

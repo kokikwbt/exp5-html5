@@ -330,19 +330,22 @@
               xhr.open('GET', document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, true);
               xhr.responseType = 'arraybuffer';
               xhr.onload = function(evt) {
-                var arraybuffer, content;
-                arraybuffer = new Uint8Array(this.response);
+                var arraybuffer, blob, objectUrl;
+                arraybuffer = this.response;
                 zip.file(xhr_buffer + ".png", arraybuffer);
                 xhr_buffer++;
                 console.log("xhr" + xhr_buffer);
                 if (zip_buffer === xhr_buffer) {
-                  content = zip.generate();
-                  location.href = "data:application/zip;base64," + content;
+                  blob = zip.generate({
+                    type: "blob"
+                  });
+                  objectUrl = URL.createObjectURL(blob);
                   return chrome.downloads.download({
-                    url: "data:application/zip;base64," + content
+                    url: objectUrl
                   });
                 }
               };
+              xhr.onerror = function(evt) {};
               _results2.push(xhr.send());
             } else {
               _results2.push(void 0);
