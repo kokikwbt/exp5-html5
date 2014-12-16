@@ -287,7 +287,7 @@
      */
     saveAllButton = document.getElementById("save_button");
     saveAllButton.onclick = function() {
-      var content, i, xhr, zip, _i, _j, _k, _ref, _ref1, _ref2, _results, _results1;
+      var i, xhr, xhr_buffer, zip, zip_buffer, _i, _j, _k, _ref, _ref1, _ref2, _results, _results1, _results2;
       if (document.getElementById("format").value === "default") {
         if (document.getElementById("main").style.display === "block") {
           _results = [];
@@ -319,26 +319,36 @@
       } else {
         if (document.getElementById("main").style.display === "block") {
           zip = new JSZip();
+          zip_buffer = 0;
+          xhr_buffer = 0;
+          _results2 = [];
           for (i = _k = 1, _ref2 = document.getElementById("main").childNodes.length - 3; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; i = 1 <= _ref2 ? ++_k : --_k) {
             if (document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked) {
+              zip_buffer++;
+              console.log("zip" + zip_buffer);
               xhr = new XMLHttpRequest();
               xhr.open('GET', document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, true);
-              xhr.responseType = "arraybuffer";
-              xhr.onreadystatechange = function(evt) {
-                if (xhr.readyState === 4) {
-                  if (xhr.status === 200) {
-                    return zip.file("default" + i + ".png", xhr.response);
-                  }
+              xhr.responseType = 'arraybuffer';
+              xhr.onload = function(evt) {
+                var arraybuffer, content;
+                arraybuffer = new Uint8Array(this.response);
+                zip.file(xhr_buffer + ".png", arraybuffer);
+                xhr_buffer++;
+                console.log("xhr" + xhr_buffer);
+                if (zip_buffer === xhr_buffer) {
+                  content = zip.generate();
+                  location.href = "data:application/zip;base64," + content;
+                  return chrome.downloads.download({
+                    url: "data:application/zip;base64," + content
+                  });
                 }
               };
-              xhr.send();
+              _results2.push(xhr.send());
+            } else {
+              _results2.push(void 0);
             }
           }
-          content = zip.generate();
-          location.href = "data:application/zip;base64," + content;
-          return chrome.downloads.download({
-            url: "data:application/zip;base64," + content
-          });
+          return _results2;
         } else {
 
         }

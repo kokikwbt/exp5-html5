@@ -244,20 +244,30 @@ window.onload = ->
         else
             if document.getElementById("main").style.display == "block"
                 zip = new JSZip()
+                zip_buffer = 0
+                xhr_buffer = 0
                 for i in [1..document.getElementById("main").childNodes.length-3]
                     if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
+                        zip_buffer++
+                        console.log("zip"+zip_buffer)
                         xhr = new XMLHttpRequest()
                         xhr.open('GET', document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, true)
-                        xhr.responseType = "arraybuffer"
-                        xhr.onreadystatechange = (evt) ->
-                            if (xhr.readyState == 4)
-                                if (xhr.status == 200) 
-                                    zip.file("default"+i+".png", xhr.response);       
+                        xhr.responseType = 'arraybuffer'
+                        xhr.onload = (evt) ->
+                            arraybuffer = new Uint8Array(this.response)
+#                            tmpurl = document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src
+#                            filename = tmpurl.replace(/^(.*)\//,'')
+                            zip.file(xhr_buffer + ".png", arraybuffer)
+                            xhr_buffer++
+                            console.log("xhr"+xhr_buffer)
+                            if zip_buffer == xhr_buffer
+                                content = zip.generate()
+                                location.href="data:application/zip;base64," + content
+                                chrome.downloads.download({url: "data:application/zip;base64," + content})
+
 #                        zip.file("default"+i+"", document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, {base64: false})
+                        
                         xhr.send()
-                content = zip.generate()
-                location.href="data:application/zip;base64," + content
-                chrome.downloads.download({url: "data:application/zip;base64," + content})
             else
                 
     ###
