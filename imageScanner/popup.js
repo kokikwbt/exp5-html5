@@ -25,10 +25,11 @@
 
   ImageData = (function() {
     function ImageData(refChild, i) {
-      var br, chbox, child_num, deleteButton, div, favButton, hrEnd, hrMid, imageName, img, newChild, parentDiv, saveButton, script, tweetButton;
+      var br, chbox, child_num, deleteButton, div, favButton, filename, hrEnd, hrMid, imageName, img, newChild, parentDiv, saveButton, script, tweetButton;
       parentDiv = refChild.parentNode;
       newChild = document.createElement("div");
       newChild.id = "box";
+      newChild.style.backgroundImage = "linear-gradient(#f7fbfc,#d9edf2,#add9e4)";
       newChild.style = "display:inline;";
       child_num = i;
       div = document.createElement("div");
@@ -51,13 +52,13 @@
       chbox = document.createElement("div");
       chbox.innerHTML = '<input type="checkbox"name="checkbox">';
       imageName = document.createElement("textarea");
-      imageName.value = 'default';
+      filename = img.src.replace(/^(.*)\//, '');
+      imageName.value = filename;
       imageName.cols = "25";
       imageName.rows = "1";
       saveButton = document.createElement("button");
       saveButton.innerHTML = "save";
       saveButton.onclick = function() {
-        var filename;
         filename = imageName.value;
         return chrome.downloads.download({
           url: chrome.extension.getBackgroundPage().imageSrc[child_num],
@@ -123,9 +124,10 @@
 
   FavData = (function() {
     function FavData(refChild, src) {
-      var br, chbox, deleteButton, div, hrEnd, hrMid, imageName, img, newChild, parentDiv, saveButton, script, tweetButton;
+      var br, chbox, deleteButton, div, filename, hrEnd, hrMid, imageName, img, newChild, parentDiv, saveButton, script, tweetButton;
       parentDiv = refChild.parentNode;
       newChild = document.createElement("div");
+      newChild.style.backgroundImage = "linear-gradient(#f0e68c,#ffd700)";
       newChild.style = "display:inline;";
       div = document.createElement("div");
       div.style.width = "160px";
@@ -156,13 +158,13 @@
       chbox = document.createElement("div");
       chbox.innerHTML = '<input type="checkbox" name="checkbox">';
       imageName = document.createElement("textarea");
-      imageName.value = 'default';
+      filename = src.replace(/^(.*)\//, '');
+      imageName.value = filename;
       imageName.cols = "25";
       imageName.rows = "1";
       saveButton = document.createElement("button");
       saveButton.innerHTML = "save";
       saveButton.onclick = function() {
-        var filename;
         filename = imageName.value;
         return chrome.downloads.download({
           url: img.src,
@@ -287,7 +289,7 @@
      */
     saveAllButton = document.getElementById("save_button");
     saveAllButton.onclick = function() {
-      var i, xhr, xhr_buffer, zip, zip_buffer, _i, _j, _k, _ref, _ref1, _ref2, _results, _results1, _results2;
+      var filename, i, xhr, xhr_buffer, zip, zip_buffer, _i, _j, _k, _l, _ref, _ref1, _ref2, _ref3, _results, _results1, _results2, _results3;
       if (document.getElementById("format").value === "default") {
         if (document.getElementById("main").style.display === "block") {
           _results = [];
@@ -308,7 +310,7 @@
             if (document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked) {
               _results1.push(chrome.downloads.download({
                 url: document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src,
-                filename: document.getElementById("main").childNodes[i].childNodes[3].value
+                filename: document.getElementById("fav").childNodes[i].childNodes[3].value
               }));
             } else {
               _results1.push(void 0);
@@ -321,9 +323,11 @@
           zip = new JSZip();
           zip_buffer = 0;
           xhr_buffer = 0;
+          filename = [];
           _results2 = [];
           for (i = _k = 1, _ref2 = document.getElementById("main").childNodes.length - 3; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; i = 1 <= _ref2 ? ++_k : --_k) {
             if (document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked) {
+              filename.push(document.getElementById("main").childNodes[i].childNodes[3].value);
               zip_buffer++;
               console.log("zip" + zip_buffer);
               xhr = new XMLHttpRequest();
@@ -332,7 +336,7 @@
               xhr.onload = function(evt) {
                 var arraybuffer, blob, objectUrl;
                 arraybuffer = this.response;
-                zip.file(xhr_buffer + ".png", arraybuffer);
+                zip.file(filename[xhr_buffer], arraybuffer);
                 xhr_buffer++;
                 console.log("xhr" + xhr_buffer);
                 if (zip_buffer === xhr_buffer) {
@@ -341,7 +345,8 @@
                   });
                   objectUrl = URL.createObjectURL(blob);
                   return chrome.downloads.download({
-                    url: objectUrl
+                    url: objectUrl,
+                    filename: "images.zip"
                   });
                 }
               };
@@ -353,7 +358,43 @@
           }
           return _results2;
         } else {
-
+          zip = new JSZip();
+          zip_buffer = 0;
+          xhr_buffer = 0;
+          filename = [];
+          _results3 = [];
+          for (i = _l = 1, _ref3 = document.getElementById("fav").childNodes.length - 3; 1 <= _ref3 ? _l <= _ref3 : _l >= _ref3; i = 1 <= _ref3 ? ++_l : --_l) {
+            if (document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked) {
+              filename.push(document.getElementById("fav").childNodes[i].childNodes[3].value);
+              zip_buffer++;
+              console.log("zip" + zip_buffer);
+              xhr = new XMLHttpRequest();
+              xhr.open('GET', document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, true);
+              xhr.responseType = 'arraybuffer';
+              xhr.onload = function(evt) {
+                var arraybuffer, blob, objectUrl;
+                arraybuffer = this.response;
+                zip.file(filename[xhr_buffer], arraybuffer);
+                xhr_buffer++;
+                console.log("xhr" + xhr_buffer);
+                if (zip_buffer === xhr_buffer) {
+                  blob = zip.generate({
+                    type: "blob"
+                  });
+                  objectUrl = URL.createObjectURL(blob);
+                  return chrome.downloads.download({
+                    url: objectUrl,
+                    filename: "images.zip"
+                  });
+                }
+              };
+              xhr.onerror = function(evt) {};
+              _results3.push(xhr.send());
+            } else {
+              _results3.push(void 0);
+            }
+          }
+          return _results3;
         }
       }
     };

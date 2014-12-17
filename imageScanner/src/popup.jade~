@@ -4,6 +4,7 @@ html(lang="ja")
       meta(charset="utf-8")
       meta(name="twitter:widgets:csp" content="on")
       link(rel="stylesheet" href="style.css")
+      script(type="text/javascript" src="base64.js")
       script(type="text/javascript" src="jszip.js")
       script(type="text/javascript" src="popup.js")
    body

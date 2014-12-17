@@ -17,6 +17,7 @@ class ImageData
         parentDiv = refChild.parentNode #親ノードを取得
         newChild = document.createElement("div") #子ノードを生成
         newChild.id = "box"
+        newChild.style.backgroundImage = "linear-gradient(#f7fbfc,#d9edf2,#add9e4)"
         newChild.style = "display:inline;"
         child_num = i
         
@@ -42,7 +43,8 @@ class ImageData
         chbox.innerHTML = '<input type="checkbox"name="checkbox">'
 
         imageName = document.createElement("textarea")
-        imageName.value = 'default'    #初期ファイル名を生成して代入したい
+        filename = img.src.replace(/^(.*)\//,'')
+        imageName.value = filename
         imageName.cols = "25"
         imageName.rows = "1"
   
@@ -109,6 +111,8 @@ class FavData
     constructor: (refChild, src) ->
         parentDiv = refChild.parentNode
         newChild = document.createElement("div")
+        newChild.style.backgroundImage = "linear-gradient(#f0e68c,#ffd700)"
+
         newChild.style = "display:inline;"
 
         div = document.createElement "div"
@@ -137,7 +141,8 @@ class FavData
         chbox.innerHTML = '<input type="checkbox" name="checkbox">'
 
         imageName = document.createElement "textarea"
-        imageName.value = 'default'
+        filename = src.replace(/^(.*)\//,'')
+        imageName.value = filename
         imageName.cols = "25"
         imageName.rows = "1"
 
@@ -240,14 +245,16 @@ window.onload = ->
             else
                 for i in [1..document.getElementById("fav").childNodes.length-3]
                     if document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked
-                        chrome.downloads.download({url: document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("main").childNodes[i].childNodes[3].value})
+                        chrome.downloads.download({url: document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, filename: document.getElementById("fav").childNodes[i].childNodes[3].value})
         else
             if document.getElementById("main").style.display == "block"
                 zip = new JSZip()
                 zip_buffer = 0
                 xhr_buffer = 0
+                filename = []
                 for i in [1..document.getElementById("main").childNodes.length-3]
                     if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
+                        filename.push(document.getElementById("main").childNodes[i].childNodes[3].value)
                         zip_buffer++
                         console.log("zip"+zip_buffer)
                         xhr = new XMLHttpRequest()
@@ -255,24 +262,45 @@ window.onload = ->
                         xhr.responseType = 'arraybuffer'
                         xhr.onload = (evt) ->
                             arraybuffer = this.response
-#                            tmpurl = document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src
-#                            filename = tmpurl.replace(/^(.*)\//,'')
-                            zip.file(xhr_buffer + ".png", arraybuffer)
+                            zip.file(filename[xhr_buffer], arraybuffer)
                             xhr_buffer++
                             console.log("xhr"+xhr_buffer)
                             if zip_buffer == xhr_buffer
                                 blob = zip.generate({type:"blob"})
                                 objectUrl =URL.createObjectURL(blob)
                                 chrome.downloads.download(
-                                    {url: objectUrl}
+                                    {url: objectUrl,filename: "images.zip"}
                                     )
-
-#                        zip.file("default"+i+"", document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, {base64: false})
                         xhr.onerror =(evt)->
 
                         xhr.send()
             else
-                
+                zip = new JSZip()
+                zip_buffer = 0
+                xhr_buffer = 0
+                filename = []
+                for i in [1..document.getElementById("fav").childNodes.length-3]
+                    if document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked
+                        filename.push(document.getElementById("fav").childNodes[i].childNodes[3].value)
+                        zip_buffer++
+                        console.log("zip"+zip_buffer)
+                        xhr = new XMLHttpRequest()
+                        xhr.open('GET', document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, true)
+                        xhr.responseType = 'arraybuffer'
+                        xhr.onload = (evt) ->
+                            arraybuffer = this.response
+                            zip.file(filename[xhr_buffer], arraybuffer)
+                            xhr_buffer++
+                            console.log("xhr"+xhr_buffer)
+                            if zip_buffer == xhr_buffer
+                                blob = zip.generate({type:"blob"})
+                                objectUrl =URL.createObjectURL(blob)
+                                chrome.downloads.download(
+                                    {url: objectUrl,filename: "images.zip"}
+                                    )
+                        xhr.onerror =(evt)->
+
+                        xhr.send()                
     ###
     ---------
     addButton

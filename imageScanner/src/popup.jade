@@ -8,17 +8,12 @@ html(lang="ja")
       script(type="text/javascript" src="jszip.js")
       script(type="text/javascript" src="popup.js")
    body
-      ul#header
-         li
-            button#select_all_button select all
-         li
-            button#cancel_all_button cancel all
-         li
-            select(id="format",name="format").
-                <option value='default' selected>default</option>
-                <option value='zip'>zip</option>
-         li
-            button#save_button save
+      button#select_all_button select all
+      button#cancel_all_button cancel all
+      select(id="format",name="format").
+          <option value='default' selected>default</option>
+          <option value='zip'>zip</option>
+      button#save_button save
       hr
       br
       div#tabs.

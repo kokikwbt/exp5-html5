@@ -22,7 +22,6 @@ body {
   width: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
-  background-image: linear-gradient(#f7fbfc, #d9edf2, #add9e4);
 }
 #fav {
   max-height: 480px;
@@ -54,12 +53,19 @@ body {
   display: inline;
 }
 #select_all_button {
+  width: 25%;
   font-size: large;
 }
 #cancel_all_button {
+  width: 25%;
+  font-size: large;
+}
+#format {
+  width: 21%;
   font-size: large;
 }
 #save_button {
+  width: 25%;
   font-size: large;
 }
 #button {
