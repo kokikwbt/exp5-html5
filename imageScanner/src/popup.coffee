@@ -28,8 +28,6 @@ class ImageData
         img = document.createElement("img")
         img.id = "image_data_left"
         img.src = chrome.extension.getBackgroundPage().imageSrc[child_num]
-        img.onclick = ->
-            window.open(img.src)
         div.appendChild(img)
 
         deleteButton = document.createElement("img")
@@ -71,16 +69,17 @@ class ImageData
         favButton.src = "./image/unfav.png"
         favButton.style.height = "20px"
         favButton.onclick = ->
-            favButton.src = "./image/fav.png"
-            if localStorage.length == 0
-                fav = [img.src]
-                localStorage.setItem("fav", JSON.stringify(fav))
-            else
-                fav = JSON.parse(localStorage.getItem("fav"))
-                fav.push(img.src)
-                localStorage.setItem("fav", JSON.stringify(fav))
-            favBox = document.getElementById "fav_data"
-            favData.push(new FavData(favBox, img.src))
+#            if favButton.src == "./image/unfav.png"
+                favButton.src = "./image/fav.png"
+                if localStorage.length == 0
+                    fav = [img.src]
+                    localStorage.setItem("fav", JSON.stringify(fav))
+                else
+                    fav = JSON.parse(localStorage.getItem("fav"))
+                    fav.push(img.src)
+                    localStorage.setItem("fav", JSON.stringify(fav))
+                favBox = document.getElementById "fav_data"
+                favData.push(new FavData(favBox, img.src))
 
         hrMid = document.createElement("hr")
         hrMid.id = "hr_mid"
@@ -122,8 +121,6 @@ class FavData
         img = document.createElement "img"
         img.id = "fav_data_left"
         img.src = src
-        img.onclick = ->
-            window.open img.src
         div.appendChild img
 
         deleteButton = document.createElement "img"

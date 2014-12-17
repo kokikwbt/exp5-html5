@@ -71,16 +71,17 @@ class ImageData
         favButton.src = "./image/unfav.png"
         favButton.style.height = "20px"
         favButton.onclick = ->
-            favButton.src = "./image/fav.png"
-            if localStorage.length == 0
-                fav = [img.src]
-                localStorage.setItem("fav", JSON.stringify(fav))
-            else
-                fav = JSON.parse(localStorage.getItem("fav"))
-                fav.push(img.src)
-                localStorage.setItem("fav", JSON.stringify(fav))
-            favBox = document.getElementById "fav_data"
-            favData.push(new FavData(favBox, img.src))
+#            if favButton.src == "./image/unfav.png"
+                favButton.src = "./image/fav.png"
+                if localStorage.length == 0
+                    fav = [img.src]
+                    localStorage.setItem("fav", JSON.stringify(fav))
+                else
+                    fav = JSON.parse(localStorage.getItem("fav"))
+                    fav.push(img.src)
+                    localStorage.setItem("fav", JSON.stringify(fav))
+                favBox = document.getElementById "fav_data"
+                favData.push(new FavData(favBox, img.src))
 
         hrMid = document.createElement("hr")
         hrMid.id = "hr_mid"
@@ -251,8 +252,10 @@ window.onload = ->
                 zip = new JSZip()
                 zip_buffer = 0
                 xhr_buffer = 0
+                filename = []
                 for i in [1..document.getElementById("main").childNodes.length-3]
                     if document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked
+                        filename.push(document.getElementById("main").childNodes[i].childNodes[3].value)
                         zip_buffer++
                         console.log("zip"+zip_buffer)
                         xhr = new XMLHttpRequest()
@@ -260,24 +263,45 @@ window.onload = ->
                         xhr.responseType = 'arraybuffer'
                         xhr.onload = (evt) ->
                             arraybuffer = this.response
-#                            tmpurl = document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src
-#                            filename = tmpurl.replace(/^(.*)\//,'')
-                            zip.file(xhr_buffer + ".png", arraybuffer)
+                            zip.file(filename[xhr_buffer], arraybuffer)
                             xhr_buffer++
                             console.log("xhr"+xhr_buffer)
                             if zip_buffer == xhr_buffer
                                 blob = zip.generate({type:"blob"})
                                 objectUrl =URL.createObjectURL(blob)
                                 chrome.downloads.download(
-                                    {url: objectUrl}
+                                    {url: objectUrl,filename: "images.zip"}
                                     )
-
-#                        zip.file("default"+i+"", document.getElementById("main").childNodes[i].childNodes[1].childNodes[0].src, {base64: false})
                         xhr.onerror =(evt)->
 
                         xhr.send()
             else
-                
+                zip = new JSZip()
+                zip_buffer = 0
+                xhr_buffer = 0
+                filename = []
+                for i in [1..document.getElementById("fav").childNodes.length-3]
+                    if document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked
+                        filename.push(document.getElementById("fav").childNodes[i].childNodes[3].value)
+                        zip_buffer++
+                        console.log("zip"+zip_buffer)
+                        xhr = new XMLHttpRequest()
+                        xhr.open('GET', document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, true)
+                        xhr.responseType = 'arraybuffer'
+                        xhr.onload = (evt) ->
+                            arraybuffer = this.response
+                            zip.file(filename[xhr_buffer], arraybuffer)
+                            xhr_buffer++
+                            console.log("xhr"+xhr_buffer)
+                            if zip_buffer == xhr_buffer
+                                blob = zip.generate({type:"blob"})
+                                objectUrl =URL.createObjectURL(blob)
+                                chrome.downloads.download(
+                                    {url: objectUrl,filename: "images.zip"}
+                                    )
+                        xhr.onerror =(evt)->
+
+                        xhr.send()                
     ###
     ---------
     addButton

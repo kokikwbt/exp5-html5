@@ -39,9 +39,6 @@
       img = document.createElement("img");
       img.id = "image_data_left";
       img.src = chrome.extension.getBackgroundPage().imageSrc[child_num];
-      img.onclick = function() {
-        return window.open(img.src);
-      };
       div.appendChild(img);
       deleteButton = document.createElement("img");
       deleteButton.id = "delete_button";
@@ -136,9 +133,6 @@
       img = document.createElement("img");
       img.id = "fav_data_left";
       img.src = src;
-      img.onclick = function() {
-        return window.open(img.src);
-      };
       div.appendChild(img);
       deleteButton = document.createElement("img");
       deleteButton.src = "./image/deleteButton.png";
