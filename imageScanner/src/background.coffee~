@@ -10,9 +10,17 @@ clearimageSrc = ->
 タブ切り替えイベントを取得時の処理
 ==================================================
 ###
-chrome.tabs.onSelectionChanged.addListener(
-    (tabId, selectInfo) ->
+chrome.tabs.onActivated.addListener(
+    (activeInfo) ->
         console.log("you changed tabs")
+        chrome.tabs.getSelected(null,
+            (tab)->
+                chrome.tabs.sendRequest(activeInfo.tabId,{changed:"changed"},
+                    (response)->
+                        console.log(response)
+                        console.log("test")
+            )   
+        )
 )
 
 
@@ -41,10 +49,11 @@ chrome.extension.onMessage.addListener(
 
 ###
 ==================================================
-右クリックメニューに追加する項目
+右クリックメニューに追加する処理
 ==================================================
 ###
 chrome.contextMenus.create({
     title: "画像を再読み込み"
     onclick: ->
+        chrome.tabs.reload()
 })

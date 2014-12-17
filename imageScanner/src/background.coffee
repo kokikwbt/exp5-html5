@@ -52,8 +52,18 @@ chrome.extension.onMessage.addListener(
 右クリックメニューに追加する処理
 ==================================================
 ###
+parentId = chrome.contextMenus.create({
+    title: "メニュー"
+})
 chrome.contextMenus.create({
-    title: "画像を再読み込み"
+    title: "画像の再読み込み"
+    parentId: parentId
     onclick: ->
         chrome.tabs.reload()
+})
+chrome.contextMenus.create({
+    title: "不具合報告"
+    parentId: parentId
+    onclick: ->
+        window.open("http://t.co/yWaeawIe5d")
 })

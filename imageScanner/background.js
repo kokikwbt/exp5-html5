@@ -1,5 +1,5 @@
 (function() {
-  var clearimageSrc;
+  var clearimageSrc, parentId;
 
   console.log(window);
 
@@ -66,10 +66,23 @@
   ==================================================
    */
 
+  parentId = chrome.contextMenus.create({
+    title: "メニュー"
+  });
+
   chrome.contextMenus.create({
-    title: "画像を再読み込み",
+    title: "画像の再読み込み",
+    parentId: parentId,
     onclick: function() {
       return chrome.tabs.reload();
+    }
+  });
+
+  chrome.contextMenus.create({
+    title: "不具合報告",
+    parentId: parentId,
+    onclick: function() {
+      return window.open("http://t.co/yWaeawIe5d");
     }
   });
 
