@@ -9,7 +9,7 @@
         },
 
         "permissions":[
-                "tabs","*://*/*","background","downloads"
+                "tabs","*://*/*","background","downloads","contextMenus"
         ],
 		
         "browser_action": {
