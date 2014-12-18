@@ -1,13 +1,13 @@
 (function() {
-  var clearimageSrc, parentId;
-
-  console.log(window);
+  var clearimageSrc, parentId, parentId2;
 
   window.imageSrc = [];
 
   clearimageSrc = function() {
     return window.imageSrc = [];
   };
+
+  localStorage.setItem("mainArticleflag", "true");
 
 
   /*
@@ -17,7 +17,6 @@
    */
 
   chrome.tabs.onActivated.addListener(function(activeInfo) {
-    console.log("you changed tabs");
     return chrome.tabs.getSelected(null, function(tab) {
       return chrome.tabs.sendRequest(activeInfo.tabId, {
         changed: "changed"
@@ -35,19 +34,18 @@
   ==================================================
    */
 
-  chrome.extension.onMessage.addListener(function(result) {
-    console.log(result);
+  chrome.extension.onMessage.addListener(function(result, sender, sendResponse) {
     if (result.refresh === "refreshrequest") {
       clearimageSrc();
-      console.log(window.imageSrc);
-      return console.log("ClearimageSrc");
+      return sendResponse({
+        mainArticleflag: localStorage.getItem("mainArticleflag")
+      });
     } else if (result.name === "image num") {
       return chrome.browserAction.setBadgeText({
         text: String(result.num)
       });
     } else if (result.name === "delete child") {
       window.imageSrc.splice(result.num, 1);
-      console.log(window.imageSrc.length);
       chrome.browserAction.setBadgeText({
         text: String(window.imageSrc.length)
       });
@@ -75,6 +73,27 @@
     parentId: parentId,
     onclick: function() {
       return chrome.tabs.reload();
+    }
+  });
+
+  parentId2 = chrome.contextMenus.create({
+    title: "画像の取得方法",
+    parentId: parentId
+  });
+
+  chrome.contextMenus.create({
+    title: "ページ内の全て",
+    parentId: parentId2,
+    onclick: function() {
+      return localStorage.setItem("mainArticleflag", "false");
+    }
+  });
+
+  chrome.contextMenus.create({
+    title: "メイン記事のみ",
+    parentId: parentId2,
+    onclick: function() {
+      return localStorage.setItem("mainArticleflag", "true");
     }
   });
 

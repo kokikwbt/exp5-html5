@@ -4,7 +4,7 @@ window.imageSrc = []
 
 clearimageSrc = ->
         window.imageSrc = []
-
+localStorage.setItem("mainArticleflag", "true")
 ###
 ==================================================
 タブ切り替えイベントを取得時の処理
@@ -30,12 +30,13 @@ chrome.tabs.onActivated.addListener(
 ==================================================
 ###
 chrome.extension.onMessage.addListener(
-    (result) ->
+    (result, sender, sendResponse) ->
         console.log(result)
         if result.refresh =="refreshrequest"
             clearimageSrc()
             console.log (window.imageSrc)
-            console.log ("ClearimageSrc")     
+            console.log ("ClearimageSrc")
+            sendResponse({mainArticleflag: localStorage.getItem("mainArticleflag")})
         else if result.name == "image num"
             chrome.browserAction.setBadgeText({text: String(result.num)})
         else if result.name == "delete child"
@@ -52,8 +53,36 @@ chrome.extension.onMessage.addListener(
 右クリックメニューに追加する処理
 ==================================================
 ###
+parentId = chrome.contextMenus.create({
+    title: "メニュー"
+})
 chrome.contextMenus.create({
-    title: "画像を再読み込み"
+    title: "画像の再読み込み"
+    parentId: parentId
     onclick: ->
         chrome.tabs.reload()
+})
+parentId2 = chrome.contextMenus.create({
+    title: "画像の取得方法"
+    parentId: parentId
+})
+chrome.contextMenus.create({
+    title: "ページ内の全て"
+    parentId: parentId2
+    onclick: ->
+        localStorage.setItem("mainArticleflag", "false")
+})
+chrome.contextMenus.create({
+    title: "メイン記事のみ"
+    parentId: parentId2
+    onclick: ->
+        localStorage.setItem("mainArticleflag", "true")
+})
+
+
+chrome.contextMenus.create({
+    title: "不具合報告"
+    parentId: parentId
+    onclick: ->
+        window.open("http://t.co/yWaeawIe5d")
 })

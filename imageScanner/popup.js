@@ -12,8 +12,6 @@
 
   fav = [];
 
-  console.log(fav);
-
 
   /*
   ==================================================
@@ -199,7 +197,7 @@
 
   /*
   ==================================================
-  zipファイル生成
+  zipファイル生成(使用しない)
   ==================================================
    */
 
@@ -236,7 +234,6 @@
     selectAllButton = document.getElementById("select_all_button");
     selectAllButton.onclick = function() {
       var i, _i, _j, _ref, _ref1, _results, _results1;
-      console.log("pushed select all button");
       if (document.getElementById("main").style.display === "block") {
         _results = [];
         for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
@@ -260,7 +257,6 @@
     cancelAllButton = document.getElementById("cancel_all_button");
     cancelAllButton.onclick = function() {
       var i, _i, _j, _ref, _ref1, _results, _results1;
-      console.log("pushed cancel all button");
       if (document.getElementById("main").style.display === "block") {
         _results = [];
         for (i = _i = 1, _ref = document.getElementById("main").childNodes.length - 3; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
@@ -361,7 +357,6 @@
             if (document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked) {
               filename.push(document.getElementById("fav").childNodes[i].childNodes[3].value);
               zip_buffer++;
-              console.log("zip" + zip_buffer);
               xhr = new XMLHttpRequest();
               xhr.open('GET', document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, true);
               xhr.responseType = 'arraybuffer';
@@ -370,7 +365,6 @@
                 arraybuffer = this.response;
                 zip.file(filename[xhr_buffer], arraybuffer);
                 xhr_buffer++;
-                console.log("xhr" + xhr_buffer);
                 if (zip_buffer === xhr_buffer) {
                   blob = zip.generate({
                     type: "blob"
@@ -394,9 +388,9 @@
     };
 
     /*
-    ---------
-    addButton
-    ---------
+    -------------------
+    addButton(追加予定)
+    -------------------
      */
 
     /*

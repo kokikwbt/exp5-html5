@@ -1,10 +1,7 @@
-console.log(window)
-
 window.imageSrc = []
-
 clearimageSrc = ->
         window.imageSrc = []
-
+localStorage.setItem("mainArticleflag", "true")
 ###
 ==================================================
 タブ切り替えイベントを取得時の処理
@@ -12,7 +9,6 @@ clearimageSrc = ->
 ###
 chrome.tabs.onActivated.addListener(
     (activeInfo) ->
-        console.log("you changed tabs")
         chrome.tabs.getSelected(null,
             (tab)->
                 chrome.tabs.sendRequest(activeInfo.tabId,{changed:"changed"},
@@ -30,17 +26,14 @@ chrome.tabs.onActivated.addListener(
 ==================================================
 ###
 chrome.extension.onMessage.addListener(
-    (result) ->
-        console.log(result)
+    (result, sender, sendResponse) ->
         if result.refresh =="refreshrequest"
             clearimageSrc()
-            console.log (window.imageSrc)
-            console.log ("ClearimageSrc")     
+            sendResponse({mainArticleflag: localStorage.getItem("mainArticleflag")})
         else if result.name == "image num"
             chrome.browserAction.setBadgeText({text: String(result.num)})
         else if result.name == "delete child"
             window.imageSrc.splice(result.num, 1)
-            console.log(window.imageSrc.length)
             chrome.browserAction.setBadgeText({text: String(window.imageSrc.length)})
             chrome.runtime.sendMessage({name: "refresh after delete"})
         else 
@@ -61,6 +54,24 @@ chrome.contextMenus.create({
     onclick: ->
         chrome.tabs.reload()
 })
+parentId2 = chrome.contextMenus.create({
+    title: "画像の取得方法"
+    parentId: parentId
+})
+chrome.contextMenus.create({
+    title: "ページ内の全て"
+    parentId: parentId2
+    onclick: ->
+        localStorage.setItem("mainArticleflag", "false")
+})
+chrome.contextMenus.create({
+    title: "メイン記事のみ"
+    parentId: parentId2
+    onclick: ->
+        localStorage.setItem("mainArticleflag", "true")
+})
+
+
 chrome.contextMenus.create({
     title: "不具合報告"
     parentId: parentId

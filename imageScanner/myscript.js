@@ -1,25 +1,3 @@
-
-/*MainArticleClassName = [
-	"article"
-	"articleText"
-	"article_body"
-	"article-body-more"
-	"mainmore"
-	"article-body-inner"
-	"article-body"
-	"entry-body"
-	"centernaka"
-	"entrybody"
-	"mainEntryMore"
-	"entry_body"
-	"entry_text"
-	"blogbody"
-	"section"
-	"articles-body"
-	"world"
-	]
- */
-
 (function() {
   var MainArticleClassName, MainArticleClassNamePost, MainArticleClassNamePre, MainArticleIdName, MakeMainArticleClassName, getImgSrc, getImgSrcMainArticle, main;
 
@@ -66,14 +44,13 @@
     chrome.runtime.sendMessage({
       name: "image num",
       num: document.images.length
-    });
+    }, function() {});
     for (i = _i = 0, _ref = document.images.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
       img[i] = document.images[i].src;
     }
-    console.log(img);
     return chrome.runtime.sendMessage({
       image: img
-    });
+    }, function() {});
   };
 
   getImgSrcMainArticle = function() {
@@ -82,30 +59,20 @@
     tempimg = [];
     tempimg2 = [];
     elements = [];
-    console.log(MainArticleClassName);
     MakeMainArticleClassName();
-    console.log(MainArticleClassName);
     for (i = _i = 0, _ref = MainArticleClassName.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
       elements.push(document.getElementsByClassName(MainArticleClassName[i]));
     }
-    console.log(elements);
     for (i = _j = 0, _ref1 = elements.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
       if (elements[i].length === 1) {
-        console.log(elements[i]);
         temp = [];
         temp = elements[i][0].getElementsByTagName("img");
-        console.log(temp);
         tempimg = [];
         for (j = _k = 0, _ref2 = temp.length - 1; 0 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 0 <= _ref2 ? ++_k : --_k) {
-          console.log(i);
-          console.log(j);
           tempimg[j] = temp[j].src;
-          console.log(tempimg);
         }
         tempimg2.push(tempimg);
-        console.log(img);
       } else if (elements[i].length >= 2) {
-        console.log("AllScan");
         getImgSrc();
         return;
       }
@@ -113,36 +80,25 @@
     for (i = _l = 0, _ref3 = MainArticleIdName.length; 0 <= _ref3 ? _l <= _ref3 : _l >= _ref3; i = 0 <= _ref3 ? ++_l : --_l) {
       elements.push(document.getElementById(MainArticleIdName[i]));
     }
-    console.log(elements);
     for (i = _m = 0, _ref4 = MainArticleIdName.length - 1; 0 <= _ref4 ? _m <= _ref4 : _m >= _ref4; i = 0 <= _ref4 ? ++_m : --_m) {
       if (elements[i].length === 1) {
-        console.log(elements[i]);
         temp = [];
         temp = elements[i][0].getElementsByTagName("img");
-        console.log(temp);
         tempimg = [];
         for (j = _n = 0, _ref5 = temp.length - 1; 0 <= _ref5 ? _n <= _ref5 : _n >= _ref5; j = 0 <= _ref5 ? ++_n : --_n) {
-          console.log(i);
-          console.log(j);
           tempimg[j] = temp[j].src;
-          console.log(tempimg);
         }
         tempimg2.push(tempimg);
-        console.log(img);
       } else if (elements[i].length >= 2) {
-        console.log("AllScan");
         getImgSrc();
         return;
       }
     }
-    console.log(tempimg2);
     compareLength = function(a, b) {
       return a.length - b.length;
     };
     tempimg2.sort(compareLength);
-    console.log(tempimg2);
     img = tempimg2[0];
-    console.log(img);
     if (!(img != null)) {
       getImgSrc();
       return;
@@ -150,25 +106,22 @@
     chrome.runtime.sendMessage({
       name: "image num",
       num: img.length
-    });
+    }, function() {});
     return chrome.runtime.sendMessage({
       image: img
-    });
+    }, function() {});
   };
 
   main = function() {
-    var MainArticleflag;
-    console.log(document.images);
-    console.log(document.images.length);
-    chrome.runtime.sendMessage({
+    return chrome.runtime.sendMessage({
       refresh: "refreshrequest"
+    }, function(response) {
+      if (response.mainArticleflag === "true") {
+        return getImgSrcMainArticle();
+      } else {
+        return getImgSrc();
+      }
     });
-    MainArticleflag = true;
-    if (MainArticleflag === true) {
-      return getImgSrcMainArticle();
-    } else {
-      return getImgSrc();
-    }
   };
 
   main();
