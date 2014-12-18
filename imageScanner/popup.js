@@ -77,7 +77,7 @@
       favButton.onclick = function() {
         var favBox;
         favButton.src = "./image/fav.png";
-        if (localStorage.length === 0) {
+        if (localStorage.length === 1) {
           fav = [img.src];
           localStorage.setItem("fav", JSON.stringify(fav));
         } else {
@@ -409,7 +409,7 @@
     favData
     ---------
      */
-    if (localStorage.length > 0) {
+    if (localStorage.length > 1) {
       fav = JSON.parse(localStorage.getItem("fav"));
       favBox = document.getElementById("fav_data");
       if (fav.length > 0) {
