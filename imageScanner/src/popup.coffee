@@ -152,6 +152,7 @@ class FavData
         tweetButton.setAttribute("href", "https://twitter.com/share")
         tweetButton.setAttribute("class", "twitter-share-button")
         tweetButton.setAttribute("data-url", img.src)
+        tweetButton.setAttribute("data-count", "none")
         tweetButton.innerHTML = "Tweet"
         script = document.createElement "script"
         script.type = "text/javascript"

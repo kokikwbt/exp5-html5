@@ -4,7 +4,6 @@
 window.imageData = []
 favData = []
 fav = []
-console.log(fav)
 ###
 ==================================================
 ImageDataクラス．読み込んだ画像１枚ごとに各html要素
@@ -179,10 +178,9 @@ class FavData
 
 ###
 ==================================================
-zipファイル生成
+zipファイル生成(使用しない)
 ==================================================
 ###
-
 create_zip = (src) ->
     zip = new JSZip()
     for i in [0..src.length]
@@ -204,15 +202,12 @@ window.onload = ->
     ###
     selectAllButton = document.getElementById "select_all_button"
     selectAllButton.onclick = ->
-        console.log("pushed select all button")
         if document.getElementById("main").style.display == "block"
             for i in [1..document.getElementById("main").childNodes.length-3]
                 document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = true
         else
             for i in [1..document.getElementById("fav").childNodes.length-3]
                 document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked = true
-
-
     ###
     -----------------
     cancel all button
@@ -220,7 +215,6 @@ window.onload = ->
     ###
     cancelAllButton = document.getElementById "cancel_all_button"
     cancelAllButton.onclick = ->
-        console.log("pushed cancel all button")
         if document.getElementById("main").style.display == "block"
             for i in [1..document.getElementById("main").childNodes.length-3]
                 document.getElementById("main").childNodes[i].childNodes[2].childNodes[0].checked = false
@@ -269,7 +263,6 @@ window.onload = ->
                                     {url: objectUrl,filename: "images.zip"}
                                     )
                         xhr.onerror =(evt)->
-
                         xhr.send()
             else
                 zip = new JSZip()
@@ -280,7 +273,6 @@ window.onload = ->
                     if document.getElementById("fav").childNodes[i].childNodes[2].childNodes[0].checked
                         filename.push(document.getElementById("fav").childNodes[i].childNodes[3].value)
                         zip_buffer++
-                        console.log("zip"+zip_buffer)
                         xhr = new XMLHttpRequest()
                         xhr.open('GET', document.getElementById("fav").childNodes[i].childNodes[1].childNodes[0].src, true)
                         xhr.responseType = 'arraybuffer'
@@ -288,7 +280,6 @@ window.onload = ->
                             arraybuffer = this.response
                             zip.file(filename[xhr_buffer], arraybuffer)
                             xhr_buffer++
-                            console.log("xhr"+xhr_buffer)
                             if zip_buffer == xhr_buffer
                                 blob = zip.generate({type:"blob"})
                                 objectUrl =URL.createObjectURL(blob)
@@ -296,16 +287,13 @@ window.onload = ->
                                     {url: objectUrl,filename: "images.zip"}
                                     )
                         xhr.onerror =(evt)->
-
                         xhr.send()                
     ###
-    ---------
-    addButton
-    ---------
+    -------------------
+    addButton(追加予定)
+    -------------------
     ###
-#    addButton = document.getElementById "add_button"
-#    addButton.onclick = ->
-#        create_zip(
+
 
     ###
     ---------
