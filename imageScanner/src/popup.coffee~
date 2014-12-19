@@ -70,7 +70,7 @@ class ImageData
         favButton.onclick = ->
 #            if favButton.src == "./image/unfav.png"
                 favButton.src = "./image/fav.png"
-                if localStorage.length == 0
+                if localStorage.length == 1
                     fav = [img.src]
                     localStorage.setItem("fav", JSON.stringify(fav))
                 else
